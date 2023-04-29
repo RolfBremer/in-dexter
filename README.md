@@ -50,3 +50,10 @@ This sample emits the index in three columns.
 Note: The actual appearance depeds on yopur template or other settings.
 
 ![Index page](./Global/Pics/SampleIndex.png)
+
+You may have noticed that some page numbers are displayed as bold. These are index entries which are marked as "main" entries. Such entries are meant to be the most important for the given entry. They can be marked as follows:
+
+```typ
+#index(class: classes.main)[Willkommen]
+```
+

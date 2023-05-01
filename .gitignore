@@ -44,3 +44,6 @@ out
 
 # VSCode
 .vscode
+
+# Unwanted PDF Files of the project
+index.pdf

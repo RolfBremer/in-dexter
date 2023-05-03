@@ -20,7 +20,7 @@
     #linebreak() #v(1em)
     #text(size: 16pt)[An index package for Typst]
     #linebreak() #v(.5em)
-    #text(size: 12pt)[Version 0.1 (1. Mai 2023)]
+    #text(size: 12pt)[Version 0.2 (3. Mai 2023)]
     #linebreak() #v(.5em)
     #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
     #v(4em)
@@ -34,7 +34,7 @@ Using the index package in a typst document consists of some simple steps:
 + Importing the package `index.typ`.
 + Marking the words or phrases to include in the index.
 + Defining the show rule for the entries (usually to hide them).
-+ Generating the index page by calling the `makeIndex()` function.
++ Generating the index page by calling the `make-index()` function.
 
 == Importing the Package
 
@@ -111,13 +111,13 @@ The index markers now show up in the resulting document and can easily be review
 
 #index(class: classes.main)[Index Page]
 
-To actually create the index page, the `makeIndex()` function has to be called. Of course,
+To actually create the index page, the `make-index()` function has to be called. Of course,
 it can be embedded into an appropriately formatted #index[Formatting]
 environment#index[Environment], like this:
 
 ```typ
     #columns(3)[
-        #makeIndex()
+        #make-index()
     ]
 ```
 
@@ -141,5 +141,5 @@ words. The index #index[Index] is much more comprehensive, assuming that the aut
 Here we generate the Index page in three columns:
 
 #columns(3)[
-    #makeIndex()
+    #make-index()
 ]

@@ -2,7 +2,8 @@
 // Use of this code is governed by a MIT license in the LICENSE.txt file.
 // For a 'how to use this package', see the accompanying .pdf + .typ document.
 
-#let contextText(content) = {
+// This function combines the text(s) of a content.
+#let content-text(content) = {
     let ct = ""
     if content.has("text") {
         ct = content.text
@@ -34,24 +35,13 @@
 
 
 // Create the index page.
-#let makeIndex() = {
+#let make-index() = {
   locate(loc => {
     let elements = query(selector(figure.where(kind: "jkrb_index")).before(loc), loc)
     let words = (:)
     for el in elements {
         let ct = ""
-        ct = contextText(el.caption)
-        // if el.caption.has("text") {
-        //     ct = el.caption.text
-        // }
-        // else {
-        //     for cc in el.caption.children {
-        //         if cc.has("text") {
-        //             if ct.len() > 0 { ct += " " }
-        //             ct += cc.text
-        //         }
-        //     }
-        // }
+        ct = content-text(el.caption)
 
         // Have we already know that entry text? If not,
         // add it to our list of entry words

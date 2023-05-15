@@ -20,10 +20,10 @@
 }
 
 // Classes for index entries. The class determines the visualization
-// of the entries page number.
+// of the entries' page number.
 #let classes = (main: "Main", simple: "Simple")
 
-// IndexEntry; used to mark an entry in the document to be included in the Index.
+// Index Entry; used to mark an entry in the document to be included in the Index.
 // An optional class may be provided.
 #let index(
     // The (short) content of the index entry.
@@ -73,7 +73,8 @@
             }
         })
 
-        #let firstCharacter = sk.slice(0,1)
+        #repr(sk)
+        #let firstCharacter = sk.first()
         #if firstCharacter != register {
             heading(level: 2, numbering: none, outlined: false, firstCharacter)
             register = firstCharacter

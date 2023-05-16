@@ -73,7 +73,6 @@
             }
         })
 
-        #repr(sk)
         #let firstCharacter = sk.first()
         #if firstCharacter != register {
             heading(level: 2, numbering: none, outlined: false, firstCharacter)

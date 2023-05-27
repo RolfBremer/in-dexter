@@ -11,7 +11,6 @@
     else {
         for cc in content.children {
             if cc.has("text") {
-                if ct.len() > 0 { ct += " " }
                 ct += cc.text
             }
         }

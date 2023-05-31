@@ -57,7 +57,13 @@ Note: The actual appearance depends on your template or other settings of your d
 You may have noticed that some page numbers are displayed as bold. These are index entries which are marked as "main" entries. Such entries are meant to be the most important for the given entry. They can be marked as follows:
 
 ```typ
-#index(class: classes.main)[Willkommen]
+  #index(class: classes.main)[Willkommen]
+```
+
+or shorter:
+
+```typ
+  #index-main[Willkommen]
 ```
 
 Currently, the following classes are supported:

@@ -81,6 +81,16 @@ It is recommended to use the `classes` definition of the package.
 - `classes.main`
 
 
+==== More Convenience
+
+There is also a convenience #index-main[Convenience] funtion, to ease the usage of main
+entries. Instead of the main entry syntax used above, one can use the following:
+
+```typ
+    #index-main[The Entry Phrase]
+```
+
+
 #pagebreak()
 
 

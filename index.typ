@@ -32,6 +32,13 @@
     class: classes.simple
     ) = figure(class, caption: content, numbering: none, kind: "jkrb_index")
 
+// Creates an index entry of class main. This is a convenience function.
+#let index-main(content) = figure(
+    classes.main,
+    caption: content,
+    numbering: none,
+    kind: "jkrb_index"
+)
 
 // Create the index page.
 #let make-index() = {

@@ -1,11 +1,10 @@
 # Typst-index
 
-Automatically create a handcrafted index in [typst](https://typst.app/).
-This typst component allows the automatic creation of an Index page with entries
-that have been manually marked in the document by its authors. This, in times
-of advanced search functionality, seems somewhat outdated, but a handcrafted index
-like this allows the authors to point the reader to just the right location in the
-document.
+Automatically create a handcrafted index in [typst](https://typst.app/). This typst
+component allows the automatic creation of an Index page with entries that have been
+manually marked in the document by its authors. This, in times of advanced search
+functionality, seems somewhat outdated, but a handcrafted index like this allows the
+authors to point the reader to just the right location(s) in the document.
 
 ⚠️ Typst is in beta and evolving, and this package evolves with it. As a result, no
 backward compatibility is guaranteed yet. Also, the package itself is under development
@@ -14,14 +13,21 @@ and fine-tuning.
 ## Importing the Component
 
 To use the index functionality, the component must be available. This
-can be achieved by copying the file `index.typ` into the project. It then must be
-imported into the file that uses it. The easiest way is to do an
+can be achieved by importing the package `in-dexter` into the project:
+
+Add the following code to the head of the document file(s) 
+that want to use the index:
 
 ```typ
-#import "index.typ": *
+  #import "@preview/in-dexter:0.0.3": *
 ```
 
-in the head of the document file(s) that want to use the index.
+Alternatively it can be loaded from the file, if you have it copied into your project.
+
+```typ
+  #import "in-dexter.typ": *
+```
+
 
 ## Marking Entries
 
@@ -29,14 +35,28 @@ To mark a word to be included in the index, a simple function can be used. In th
 following sample code, the word "elit" is marked to be included into the index.
 
 ```typ
-= Sample Text
-Lorem ipsum dolor sit amet, consectetur adipiscing #index[elit], sed do eiusmod tempor
-incididunt ut labore et dolore.
+  = Sample Text
+
+  Lorem ipsum dolor sit amet, consectetur adipiscing #index[elit], sed do eiusmod tempor
+  incididunt ut labore et dolore.
 ```
 
-The marking, by default, is invisible in the resulting text, while the marked word
-will still be visible. With the marking in place, the index component knows about
-the word, as well as its location in the document.
+The marking, by default, is invisible in the resulting text, while the marked word will
+still be visible. With the marking in place, the index component knows about the word, as
+well as its location in the document.
+
+## Controlling the Show
+
+At the start of this document, just after the `import` #index[Import] statements, we used
+a `show` rule to define, what we want to see of the index markers in the resulting
+document. This is usually defined in a way, that the markers just show nothing:
+
+```typ
+    // Index-Entry hiding : this rule makes the index entries in the document invisible.
+    #show figure.where(kind: "jkrb_index"): it => {}
+```
+
+A complete sample can be found in the file [PackageReadme.md](./PackageReadme.md).
 
 ## Generating the Index Page
 

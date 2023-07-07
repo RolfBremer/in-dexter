@@ -1,6 +1,6 @@
-#import "./index.typ": *
+#import "./in-dexter.typ": *
 
-// This typst file demonstrates the usage of the index package.
+// This typst file demonstrates the usage of the in-dexter package.
 #set text(lang: "en", font: "Arial", size: 10pt)
 #set heading(numbering: "1.1")
 
@@ -16,36 +16,45 @@
 
 // Front Matter
 #align(center)[
-    #text(size: 23pt)[Typst-Index]
+    #text(size: 23pt)[in-dexter]
     #linebreak() #v(1em)
     #text(size: 16pt)[An index package for Typst]
     #linebreak() #v(.5em)
-    #text(size: 12pt)[Version 0.2 (3. Mai 2023)]
+    #text(size: 12pt)[Version 0.0.3 (7. July 2023)]
     #linebreak() #v(.5em)
     #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
     #v(4em)
 ]
 
 
-= Sample Document to Demonstrate the Typst-Index
+= Sample Document to Demonstrate the in-dexter package
 
-Using the index package in a typst document consists of some simple steps:
+Using the in-dexter package in a typst document consists of some simple steps:
 
-+ Importing the package `index.typ`.
++ Importing the package `in-dexter`.
 + Marking the words or phrases to include in the index.
 + Defining the show rule for the entries (usually to hide them).
 + Generating the index page by calling the `make-index()` function.
 
+
 == Importing the Package
 
-The index package is currently available on GitHub
-(https://github.com/RolfBremer/typst-index). It is still in development and may have
+The in-dexter package is currently available on GitHub in its home repository
+(https://github.com/RolfBremer/in-dexter). It is still in development and may have
 breaking changes #index[Breaking Changes] in its next iteration.
 #index[Iteration]#index[Development]
 
 ```typ
-    #import "./index.typ": *
+    #import "./in-dexter.typ": *
 ```
+
+The package is also available via Typst's build-in Package Manager:
+
+```typ
+    #import "@preview/in-dexter:0.0.3": *
+```
+
+Note, that the version number ("0.0.3") have to be adapted to get the wanted version.
 
 
 == Marking of Entries
@@ -83,7 +92,7 @@ It is recommended to use the `classes` definition of the package.
 
 ==== More Convenience
 
-There is also a convenience #index-main[Convenience] funtion, to ease the usage of main
+There is also a convenience #index-main[Convenience] function, to ease the usage of main
 entries. Instead of the main entry syntax used above, one can use the following:
 
 ```typ

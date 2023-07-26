@@ -26,7 +26,7 @@
 )
 
 // Create the index page.
-#let make-index(title: none) = {
+#let make-index(title: none, outlined: false) = {
     // This function combines the text(s) of a content.
     let content-text(content) = {
         let ct = ""
@@ -68,7 +68,7 @@
 
         // Output.
         let register = ""
-        if title != none { heading(outlined: false, numbering: none, title) }
+        if title != none { heading(outlined: outlined, numbering: none, title) }
         for sk in sortedkeys [
 
             // Use class specific formatting for the page numbers.

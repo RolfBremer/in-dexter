@@ -73,6 +73,7 @@ The `make-index()` function takes two arguments: `title` and `outlined`.
 - `title` adds a title (with `heading`) and
 - `outlined` is `false` by default and is passed to the heading function
 If no title is given the heading should never appear in the layout.
+Note: The heading is (currently) not numbered.
 
 This sample emits the index in three columns.
 Note: The actual appearance depends on your template or other settings of your document.

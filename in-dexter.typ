@@ -27,6 +27,7 @@
 
 // Create the index page.
 #let make-index(title: none, outlined: false) = {
+
     // This function combines the text(s) of a content.
     let content-text(content) = {
         let ct = ""
@@ -48,7 +49,12 @@
         let words = (:)
         for el in elements {
             let ct = ""
-            ct = content-text(el.caption)
+            if el.caption.has("body"){
+                ct = content-text(el.caption.body)
+            }
+            else{
+                ct = content-text(el.caption)
+            }
 
             // Have we already know that entry text? If not,
             // add it to our list of entry words

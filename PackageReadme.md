@@ -35,7 +35,7 @@ Add the following code to the head of the document file(s)
 that want to use the index:
 
 ```typ
-  #import "@preview/in-dexter:0.0.3": *
+  #import "@preview/in-dexter:0.0.4": *
 ```
 
 ## Marking Entries
@@ -134,7 +134,7 @@ This is a very brief sample to demonstrate how in-dexter can be used. The next c
 contains a more fleshed out sample.
 
 ```typ
-#import "@preview/in-dexter:0.0.3": *
+#import "@preview/in-dexter:0.0.4": *
 
 // Defining, how index marker entries in the document appear (in this case: invisible)
 #show figure.where(kind: "jkrb_index"): it => {}
@@ -157,7 +157,7 @@ This section contains the generated Index.
 ### Full Sample Document
 
 ```typ
-#import "@preview/in-dexter:0.0.3": *
+#import "@preview/in-dexter:0.0.4": *
 
 
 // Document settings
@@ -219,6 +219,10 @@ A more complex sample PDF is available there as well.
 </span>
 
 ## Changelog
+
+### v0.0.5
+
+* Address change in `figure.caption` in typst (commit: 976abdf ).
 
 ### v0.0.4
 

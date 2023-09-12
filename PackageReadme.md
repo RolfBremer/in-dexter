@@ -35,7 +35,7 @@ Add the following code to the head of the document file(s)
 that want to use the index:
 
 ```typ
-  #import "@preview/in-dexter:0.0.4": *
+  #import "@preview/in-dexter:0.0.5": *
 ```
 
 ## Marking Entries
@@ -134,7 +134,7 @@ This is a very brief sample to demonstrate how in-dexter can be used. The next c
 contains a more fleshed out sample.
 
 ```typ
-#import "@preview/in-dexter:0.0.4": *
+#import "@preview/in-dexter:0.0.5": *
 
 // Defining, how index marker entries in the document appear (in this case: invisible)
 #show figure.where(kind: "jkrb_index"): it => {}
@@ -157,7 +157,7 @@ This section contains the generated Index.
 ### Full Sample Document
 
 ```typ
-#import "@preview/in-dexter:0.0.4": *
+#import "@preview/in-dexter:0.0.5": *
 
 
 // Document settings

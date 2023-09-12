@@ -18,7 +18,7 @@ can be achieved by importing the package `in-dexter` into the project:
 Add the following code to the head of the document file(s) that want to use the index:
 
 ```typ
-  #import "@preview/in-dexter:0.0.3": *
+  #import "@preview/in-dexter:0.0.5": *
 ```
 
 Alternatively it can be loaded from the file, if you have it copied into your project.

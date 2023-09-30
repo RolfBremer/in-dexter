@@ -7,12 +7,6 @@
 // Index-Entry hiding : this rule makes the index entries in the document invisible.
 #show figure.where(kind: "jkrb_index"): it => {}
 
-// Index-Entry showing : this rule makes the index entries in the document visible.
-// Use this for review purposes alternatively to the hiding rule above.
-// #show figure.where(kind: "jkrb_index"): it => {
-//     text(fill: red)[ --> '#it.caption']
-// }
-
 
 // Front Matter
 #align(center)[
@@ -20,12 +14,11 @@
     #linebreak() #v(1em)
     #text(size: 16pt)[An index package for Typst]
     #linebreak() #v(.5em)
-    #text(size: 12pt)[Version 0.0.5 (12. September 2023)]
+    #text(size: 12pt)[Version 0.0.6 (30. September 2023)]
     #linebreak() #v(.5em)
     #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
     #v(4em)
 ]
-
 
 = Sample Document to Demonstrate the in-dexter package
 
@@ -33,7 +26,6 @@ Using the in-dexter package in a typst document consists of some simple steps:
 
 + Importing the package `in-dexter`.
 + Marking the words or phrases to include in the index.
-+ Defining the show rule for the entries (usually to hide them).
 + Generating the index page by calling the `make-index()` function.
 
 
@@ -51,17 +43,19 @@ breaking changes #index[Breaking Changes] in its next iteration.
 The package is also available via Typst's build-in Package Manager:
 
 ```typ
-    #import "@preview/in-dexter:0.0.3": *
+    #import "@preview/in-dexter:0.0.6": *
 ```
 
-Note, that the version number ("0.0.3") have to be adapted to get the wanted version.
+Note, that the version number of the typst package has to be adapted to get the wanted
+version.
 
 
 == Marking of Entries
-We have marked several words to be included in an index page at the
-end of the document. #index[Sample] The markup for the entry stays invisible
-#index[Invisible]. Its location in the text gets recorded, and later it is shown as a page
-reference in the index page. #index[Index Page]
+
+We have marked several words to be included in an index page at the end of the document.
+#index[Sample] The markup for the entry stays invisible#index[Invisible]. Its location in
+the text gets recorded, and later it is shown as a page reference in the index page.
+#index[Index Page]
 
 ```typ
     #index[The Entry Phrase]
@@ -75,7 +69,7 @@ reference in the index page. #index[Index Page]
 
 The entries support a class. This class determines the
 visualization for the page number of the entry. Currently, we distinguish between class
-"Simple" #index[Simple] and class "Main" #index[Main]. The first one is the default. The
+"simple" #index[Simple] and class "main" #index[Main]. The first one is the default. The
 second is provided to mark the main reference for that entry -- its page number will be
 printed in *bold*.
 
@@ -103,29 +97,6 @@ entries. Instead of the main entry syntax used above, one can use the following:
 #pagebreak()
 
 
-== Controlling the Show
-
-At the start of this document, just after the `import` #index[Import] statements, we used
-a `show` rule #index[Show Rule] to define, what we want to see of the index markers in the
-resulting document. This is usually defined in a way, that the markers just show nothing:
-
-```typ
-    // Index-Entry hiding : this rule makes the index entries in the document invisible.
-    #show figure.where(kind: "jkrb_index"): it => {}
-```
-
-For review #index[Review] reasons, this can be changed to show up in the resulting
-document. For example like this:
-
-```typ
-    // Index-Entry: this rule makes the index entries in the document visible.
-    #show figure.where(kind: "jkrb_index"): it => {
-        text(fill: red)[ --> '#it.caption']
-    }
-```
-
-The index markers now show up in the resulting document and can easily be reviewed.
-
 == The Index Page
 
 #index(class: classes.main)[Index Page]
@@ -145,13 +116,21 @@ environment#index[Environment], like this:
 
 #index(class: classes.main)[Searching vs. Index]
 
-A _handpicked Index_ #index[Hand Picked] in times of search functionality #index[Search
-Functionality] seems a bit old-fashioned #index[Old-fashioned] at the first glance. But such
-an index allows the author to direct the reader who is looking for a specific topic, to
-exactly the right places. Especially in larger documents #index[Large Documents] and books
-this becomes very useful, since search engines may provide too many locations of specific
-words. The index #index[Index] is much more comprehensive, assuming that the author
-#index[Authors responsibility] has its content #index[Content] selected well.
+A _hand-picked_ #index[Hand Picked] or _handcrafted_ #index[Handcrafted] Index in times of
+search functionality #index[Search Functionality] seems a bit old-fashioned
+#index[Old-fashioned] at the first glance. But such an index allows the author to direct
+the reader, who is looking for a specific topic#index[Topic], to exactly the right
+places. Especially in larger documents #index[Large Documents] and books #index[Books]
+this becomes very useful, since search engines #index[Search Engines] may provide
+#index[Provide] too many locations of specific words. The index #index[Index] is much more
+comprehensive#index[Comprehensive], assuming that the author #index[Authors
+responsibility] has its content #index[Content] selected well. Authors know best where a
+specific topic is explained #index[Explained] thoroughly #index[Thoroughly] (using the
+`index-main` function to point there) or merely noteworthy #index[Noteworthy] mentioned
+(using the `index` function). Note, that this document is not necessarily a good example
+of the index. Here we just need to have as many index entries #index[Entries] as possible
+to demonstrate #index-main[Demonstrate] the functionality #index[Functionality] and have a
+properly #index[Properly] filled index at the end.
 
 #line(length: 100%, stroke: .1pt + gray)
 

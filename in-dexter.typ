@@ -1,5 +1,5 @@
 // Copyright 2023 Rolf Bremer, Jutta Klebe
-// Use of this code is governed by an Apache License in the LICENSE.txt file.
+// Use of this code is governed by the License in the LICENSE.txt file.
 // For a 'how to use this package', see the accompanying .md, .pdf + .typ documents.
 
 
@@ -7,23 +7,23 @@
 // of the entries' page number.
 #let classes = (main: "Main", simple: "Simple")
 
+
 // Index Entry; used to mark an entry in the document to be included in the Index.
 // An optional class may be provided.
 #let index(
-    // The (short) content of the index entry.
     content,
 
     // Optional class for the entry.
     class: classes.simple
-    ) = figure(class, caption: content, numbering: none, kind: "jkrb_index")
+) = locate(loc => [#metadata((class: class, content: content, location: loc.position()))<jkrb_index>])
 
-// Creates an index entry of class main. This is a convenience function.
-#let index-main(content) = figure(
-    classes.main,
-    caption: content,
-    numbering: none,
-    kind: "jkrb_index"
-)
+#let index-main(
+    content,
+
+    // Optional class for the entry.
+    class: classes.main
+) = locate(loc => [#metadata((class: class, content: content, location: loc.position()))<jkrb_index>])
+
 
 // Create the index page.
 #let make-index(title: none, outlined: false) = {
@@ -45,16 +45,10 @@
     }
 
     locate(loc => {
-        let elements = query(selector(figure.where(kind: "jkrb_index")).before(loc), loc)
+        let elements = query(<jkrb_index>, loc)
         let words = (:)
         for el in elements {
-            let ct = ""
-            if el.caption.has("body"){
-                ct = content-text(el.caption.body)
-            }
-            else{
-                ct = content-text(el.caption)
-            }
+            let ct = content-text(el.value.content)
 
             // Have we already know that entry text? If not,
             // add it to our list of entry words
@@ -63,7 +57,7 @@
             }
 
             // Add the new page entry to the list.
-            let ent = (class: el.body.text, page: el.location().page())
+            let ent = (class: el.value.class, page: el.value.location.page)
             if not words.at(ct).contains(ent){
                 words.at(ct).push(ent)
             }

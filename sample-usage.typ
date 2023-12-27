@@ -64,8 +64,8 @@ the text gets recorded, and later it is shown as a page reference in the index p
 
 === Marker Classes
 
-#index(class: classes.main)[Classes]
-#index(class: classes.main)[Marker Classes]
+#index-of(classes.main, [Classes])
+#index-of(classes.main, [Marker Classes])
 
 The entries support a class. This class determines the
 visualization for the page number of the entry. Currently, we distinguish between class
@@ -74,7 +74,7 @@ second is provided to mark the main reference for that entry -- its page number 
 printed in *bold*.
 
 ```typ
-    #index(class: classes.main)[The Entry Phrase]
+    #index([The Entry Phrase])
 ```
 
 In future versions of this package there may be more marker classes for additional cases.
@@ -99,7 +99,7 @@ entries. Instead of the main entry syntax used above, one can use the following:
 
 == The Index Page
 
-#index(class: classes.main)[Index Page]
+#index[Index Page]
 
 To actually create the index page, the `make-index()` function has to be called. Of course,
 it can be embedded into an appropriately formatted #index[Formatting]
@@ -114,8 +114,8 @@ environment#index[Environment], like this:
 
 = Why Having an Index in Times of Search Functionality?
 
-#index(class: classes.main)[Searching vs. Index]
-
+#index-of(classes.main, [Searching vs. Index])
+//
 A _hand-picked_ #index[Hand Picked] or _handcrafted_ #index[Handcrafted] Index in times of
 search functionality #index[Search Functionality] seems a bit old-fashioned
 #index[Old-fashioned] at the first glance. But such an index allows the author to direct
@@ -123,14 +123,14 @@ the reader, who is looking for a specific topic#index[Topic], to exactly the rig
 places. Especially in larger documents #index[Large Documents] and books #index[Books]
 this becomes very useful, since search engines #index[Search Engines] may provide
 #index[Provide] too many locations of specific words. The index #index[Index] is much more
-comprehensive#index[Comprehensive], assuming that the author #index[Authors
-responsibility] has its content #index[Content] selected well. Authors know best where a
+comprehensive#index[Comprehensive], assuming that the author #index[Authors responsibility]
+has its content #index[Content] selected well. Authors know best where a
 specific topic is explained #index[Explained] thoroughly #index[Thoroughly] (using the
 `index-main` function to point there) or merely noteworthy #index[Noteworthy] mentioned
 (using the `index` function). Note, that this document is not necessarily a good example
 of the index. Here we just need to have as many index entries #index[Entries] as possible
-to demonstrate #index-main[Demonstrate] the functionality #index[Functionality] and have a
-properly #index[Properly] filled index at the end.
+to demonstrate #index-main[Demonstrate] the functionality #index[Functionality]
+and have a properly #index[Properly] filled index at the end.
 
 #line(length: 100%, stroke: .1pt + gray)
 

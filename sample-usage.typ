@@ -62,37 +62,21 @@ the text gets recorded, and later it is shown as a page reference in the index p
 ```
 
 
-=== Marker Classes
+=== Formatting Entries
 
-#index-of(classes.main, [Classes])
-#index-of(classes.main, [Marker Classes])
+#index(fmt: strong, [Formatting Entries])
 
-The entries support a class. This class determines the
-visualization for the page number of the entry. Currently, we distinguish between class
-"simple" #index[Simple] and class "main" #index[Main]. The first one is the default. The
-second is provided to mark the main reference for that entry -- its page number will be
-printed in *bold*.
+Entries can be formatted with arbitrary functions that map `content` to `content`
 
 ```typ
-    #index([The Entry Phrase])
+    #index(fmt: it => strong(it), [The Entry Phrase])
 ```
 
-In future versions of this package there may be more marker classes for additional cases.
-It is recommended to use the `classes` definition of the package.
-
-- `classes.simple`
-- `classes.main`
-
-
-==== More Convenience
-
-There is also a convenience #index-main[Convenience] function, to ease the usage of main
-entries. Instead of the main entry syntax used above, one can use the following:
+or
 
 ```typ
-    #index-main[The Entry Phrase]
+    #index(fmt: strong, [The Entry Phrase])
 ```
-
 
 #pagebreak()
 
@@ -114,7 +98,7 @@ environment#index[Environment], like this:
 
 = Why Having an Index in Times of Search Functionality?
 
-#index-of(classes.main, [Searching vs. Index])
+#index(fmt: strong, [Searching vs. Index])
 //
 A _hand-picked_ #index[Hand Picked] or _handcrafted_ #index[Handcrafted] Index in times of
 search functionality #index[Search Functionality] seems a bit old-fashioned
@@ -129,7 +113,7 @@ specific topic is explained #index[Explained] thoroughly #index[Thoroughly] (usi
 `index-main` function to point there) or merely noteworthy #index[Noteworthy] mentioned
 (using the `index` function). Note, that this document is not necessarily a good example
 of the index. Here we just need to have as many index entries #index[Entries] as possible
-to demonstrate #index-main[Demonstrate] the functionality #index[Functionality]
+to demonstrate #index(fmt: strong, [Demonstrate]) the functionality #index[Functionality]
 and have a properly #index[Properly] filled index at the end.
 
 #line(length: 100%, stroke: .1pt + gray)

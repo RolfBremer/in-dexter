@@ -103,22 +103,14 @@ which are marked as "main" entries. Such entries are meant to be the most import
 the given entry. They can be marked as follows:
 
 ```typ
-#index(class: classes.main)[Willkommen]
+#index(fmt: strong, [Willkommen])
 ```
 
-or shorter:
+or you can define a helper function
 
 ```typ
-#index-main[Willkommen]
+#let index-main(..args) = index(fmt: strong, ..args)
 ```
-
-Currently, the following classes are supported:
-
-* Simple\
-  This is the default class.
-* Main\
-  This is for important entries. Their page numbers are printed bold in the index page.
-
 
 ### Brief Sample Document
 
@@ -126,7 +118,7 @@ This is a very brief sample to demonstrate how in-dexter can be used. The next c
 contains a more fleshed out sample.
 
 ```typ
-#import "@preview/in-dexter:0.0.6": *
+#import "@preview/in-dexter:0.1.0": *
 
 
 = My Sample Document with `in-dexter`
@@ -146,8 +138,9 @@ This section contains the generated Index.
 ### Full Sample Document
 
 ```typ
-#import "@preview/in-dexter:0.0.6": *
+#import "@preview/in-dexter:0.1.0": *
 
+#let index-main(..args) = index(fmt: strong, ..args)
 
 // Document settings
 #set page("a5")
@@ -211,6 +204,14 @@ A more complex sample PDF is available there as well.
 </span>
 
 ## Changelog
+
+### v0.1.0
+
+* full refactor
+* changing "marker classes" to format function `fmt: content -> content` e.g. `index(fmt: strong,
+[entry])`
+* removes `index-main` function
+* allow nested entries
 
 ### v0.0.6
 

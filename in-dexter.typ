@@ -2,14 +2,26 @@
 // Use of this code is governed by the License in the LICENSE.txt file.
 // For a 'how to use this package', see the accompanying .md, .pdf + .typ documents.
 
-#let index(fmt: it => it, ..entry) = locate(loc => [
+/**
+ * adds a new entrty to the index
+ * @param fmt: function: content -> content
+ * @param initial: "letter" to sort entries under - otherwise first letter of entry is used,
+ *        useful for indexing umlauts or accented letters with their unaccented versions or
+ *        symbols under a common "Symbols" headline
+ * @param ..entry, variable argument to nest index entries (left to right)
+ */
+#let index(fmt: it => it, initial: none, ..entry) = locate(loc => [
     #metadata((
         fmt: fmt,
+        initial: initial,
         location: loc.position(),
         entry: entry,
     ))<jkrb_index>
 ])
 
+/**
+ * extracts (nested) content or text to content
+ */
 #let as-text(input) = {
     if type(input) == str {
         input
@@ -26,10 +38,12 @@
     }
 }
 
-#let plain(entry, page, fmt, register) = {
-    let initial-letter = entry.first()
+/**
+ * internal function to set plain (unnested) entries
+ */
+#let plain(entry, page, fmt, initial, register) = {
+    let initial-letter = if initial == none { entry.first() } else { initial }
     let page-link = (page: page, fmt: fmt)
-
     let reg-entry = register.at(initial-letter, default: (:))
     let refs = reg-entry.at(entry, default: (:))
     let pages = refs.at("pages", default: ())
@@ -42,25 +56,36 @@
     register
 }
 
+/**
+ * internal function to collet plain and nested entries into the index
+ */
 #let references(loc) = {
     let register = (:)
     for indexed in query(<jkrb_index>, loc) {
-        let (entry, fmt, location) = indexed.value
+        let (entry, fmt, initial, location) = indexed.value
         let entries = entry.pos().map(as-text)
         if entries.len() == 0 {
             panic("expected entry to have at least one entry to add to the index")
         } else if entries.len() == 1 {
-            register = plain(entries.first(), location.page, fmt, register)
+            register = plain(entries.first(), location.page, fmt, initial, register)
         } else {
         }
     }
     register
 }
 
+/**
+ * internal function to format a page link
+ */
 #let make-link((page, fmt)) = {
     link((page: page, x: 0pt, y: 0pt), fmt[#page])
 }
 
+/**
+ * inserts the index into the document
+ * @param title (default: none) sets the title of the index to use
+ * @param ..entry, variable argument to nest index entries (left to right)
+ */
 #let make-index(title: none, outlined: false) = locate(loc => {
     let dict = references(loc)
 

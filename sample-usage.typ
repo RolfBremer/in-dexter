@@ -114,7 +114,8 @@ specific topic is explained #index[Explained] thoroughly #index[Thoroughly] (usi
 (using the `index` function). Note, that this document is not necessarily a good example
 of the index. Here we just need to have as many index entries #index[Entries] as possible
 to demonstrate #index(fmt: strong, [Demonstrate]) the functionality #index[Functionality]
-and have a properly #index[Properly] filled index at the end.
+and have a properly #index[Properly] filled index at the end. Even for symbols like 
+`(*)`#index(initial: "# Symbols", "(*)").
 
 #line(length: 100%, stroke: .1pt + gray)
 

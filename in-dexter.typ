@@ -39,23 +39,22 @@
 }
 
 /**
- * internal function to set nested entries
+ * internal function to set plain and nested entries
  */
 #let make-entries(entries, page-link, reg-entry) = {
     let (entry, ..rest) = entries
-    if rest.len() == 0 {
-        let pages = reg-entry.at(entry, default: (:)).at("pages", default: ())
 
+    if rest.len() > 0 {
+        let nested-entries = reg-entry.at(entry, default: (:))
+        let ref = make-entries(rest, page-link, nested-entries.at("nested", default: (:)))
+        nested-entries.insert("nested", ref)
+        reg-entry.insert(entry, nested-entries)
+    } else {
+        let pages = reg-entry.at(entry, default: (:)).at("pages", default: ())
         if not pages.contains(page-link) {
             pages.push(page-link)
             reg-entry.insert(entry, ("pages": pages))
         }
-    } else {
-        let nested-entries = reg-entry.at("nested", default: (:))
-        if nested-entries.keys().len() > 0 { panic(nested-entries) }
-        let ref = make-entries(rest, page-link, nested-entries.at(entry, default: (:)))
-        nested-entries.insert("nested", ref)
-        reg-entry.insert(entry, nested-entries)
     }
     reg-entry
 }
@@ -87,19 +86,21 @@
 }
 
 /**
- * internal function to format a page link
+ * internal function to format a plain or nested entry
  */
 #let render-entry(idx, entries, lvl) = {
     let pages = entries.at("pages", default: ())
-    let rendered-pages = [ #box(width: (lvl + 1) * 1em)#idx#box(width: 1fr)#pages.map(render-link).join(", ") ]
+    let rendered-pages = [
+        #box(width: lvl * 1em)#idx#box(width: 1fr)#pages.map(render-link).join(", ") \
+    ]
     let sub-entries = entries.at("nested", default: (:))
     let rendered-entries = if sub-entries.keys().len() > 0 [
         #for entry in sub-entries.keys().sorted() [
-            #render-entry(entry, sub-entries.at(entry), lvl + 1) \
+            #render-entry(entry, sub-entries.at(entry), lvl + 1)
         ]
     ]
     [
-        #rendered-pages \
+        #rendered-pages
         #rendered-entries
     ]
 }
@@ -107,7 +108,7 @@
 /**
  * inserts the index into the document
  * @param title (default: none) sets the title of the index to use
- * @param ..entry, variable argument to nest index entries (left to right)
+ * @param outlined (default: false) if index is shown in outline (table of contents)
  */
 #let make-index(title: none, outlined: false) = locate(loc => {
     let dict = references(loc)
@@ -120,7 +121,6 @@
         )
     }
 
-    // panic(dict)
     for initial in dict.keys().sorted() {
         heading(level: 2, numbering: none, outlined: false, initial)
         let entry = dict.at(initial)

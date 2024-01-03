@@ -64,18 +64,37 @@
  */
 #let references(loc) = {
     let register = (:)
+    let initials = (:)
     for indexed in query(<jkrb_index>, loc) {
         let (entry, fmt, initial, location) = indexed.value
         let entries = entry.pos().map(as-text)
         if entries.len() == 0 {
             panic("expected entry to have at least one entry to add to the index")
         } else {
-            let initial-letter = if initial == none { entries.first().first() } else { initial }
+            let initial-letter = if initial == none {
+                let first-letter = entries.first().first()
+                initials.insert(first-letter, first-letter)
+                first-letter
+            } else {
+                if (type(initial) == dictionary) {
+                    let letter = initial.at("letter")
+                    let sort-by = initial.at("sort-by", default: letter)
+                    initials.insert(sort-by, letter)
+                    letter
+                } else if (type(initial) == string) {
+                    let first-letter = initial.first()
+                    initials.insert(first-letter, first-letter)
+
+                } else {
+                    panic("Expected initial to be either a 'string' or '(letter: <string>, sort-by: <none|string>)'")
+                }
+
+            }
             let reg-entry = register.at(initial-letter, default: (:))
             register.insert(initial-letter, make-entries(entries, (page: location.page, fmt: fmt), reg-entry))
         }
     }
-    register
+    (register: register, initials: initials)
 }
 
 /**
@@ -89,7 +108,7 @@
  * internal function to format a plain or nested entry
  */
 #let render-entry(idx, entries, lvl) = {
-    let pages = entries.at("pages", default: ())
+    let pages = entries.at("patges", default: ())
     let rendered-pages = [
         #box(width: lvl * 1em)#idx#box(width: 1fr)#pages.map(render-link).join(", ") \
     ]
@@ -111,7 +130,7 @@
  * @param outlined (default: false) if index is shown in outline (table of contents)
  */
 #let make-index(title: none, outlined: false) = locate(loc => {
-    let dict = references(loc)
+    let (register, initials) = references(loc)
 
     if title != none {
         heading(
@@ -121,9 +140,10 @@
         )
     }
 
-    for initial in dict.keys().sorted() {
-        heading(level: 2, numbering: none, outlined: false, initial)
-        let entry = dict.at(initial)
+    for initial in initials.keys().sorted() {
+        let letter = initials.at(initial)
+        heading(level: 2, numbering: none, outlined: false, letter)
+        let entry = register.at(letter)
         for idx in entry.keys().sorted() {
             render-entry(idx, entry.at(idx), 0)
         }

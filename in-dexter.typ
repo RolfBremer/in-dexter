@@ -39,21 +39,25 @@
 }
 
 /**
- * internal function to set plain (unnested) entries
+ * internal function to set nested entries
  */
-#let plain(entry, page, fmt, initial, register) = {
-    let initial-letter = if initial == none { entry.first() } else { initial }
-    let page-link = (page: page, fmt: fmt)
-    let reg-entry = register.at(initial-letter, default: (:))
-    let refs = reg-entry.at(entry, default: (:))
-    let pages = refs.at("pages", default: ())
+#let make-entries(entries, page-link, reg-entry) = {
+    let (entry, ..rest) = entries
+    if rest.len() == 0 {
+        let pages = reg-entry.at(entry, default: (:)).at("pages", default: ())
 
-    if not pages.contains(page-link) {
-        pages.push(page-link)
-        reg-entry.insert(entry, ("pages": pages))
-        register.insert(initial-letter, reg-entry)
+        if not pages.contains(page-link) {
+            pages.push(page-link)
+            reg-entry.insert(entry, ("pages": pages))
+        }
+    } else {
+        let nested-entries = reg-entry.at("nested", default: (:))
+        if nested-entries.keys().len() > 0 { panic(nested-entries) }
+        let ref = make-entries(rest, page-link, nested-entries.at(entry, default: (:)))
+        nested-entries.insert("nested", ref)
+        reg-entry.insert(entry, nested-entries)
     }
-    register
+    reg-entry
 }
 
 /**
@@ -66,9 +70,10 @@
         let entries = entry.pos().map(as-text)
         if entries.len() == 0 {
             panic("expected entry to have at least one entry to add to the index")
-        } else if entries.len() == 1 {
-            register = plain(entries.first(), location.page, fmt, initial, register)
         } else {
+            let initial-letter = if initial == none { entries.first().first() } else { initial }
+            let reg-entry = register.at(initial-letter, default: (:))
+            register.insert(initial-letter, make-entries(entries, (page: location.page, fmt: fmt), reg-entry))
         }
     }
     register
@@ -77,8 +82,26 @@
 /**
  * internal function to format a page link
  */
-#let make-link((page, fmt)) = {
+#let render-link((page, fmt)) = {
     link((page: page, x: 0pt, y: 0pt), fmt[#page])
+}
+
+/**
+ * internal function to format a page link
+ */
+#let render-entry(idx, entries, lvl) = {
+    let pages = entries.at("pages", default: ())
+    let rendered-pages = [ #box(width: (lvl + 1) * 1em)#idx#box(width: 1fr)#pages.map(render-link).join(", ") ]
+    let sub-entries = entries.at("nested", default: (:))
+    let rendered-entries = if sub-entries.keys().len() > 0 [
+        #for entry in sub-entries.keys().sorted() [
+            #render-entry(entry, sub-entries.at(entry), lvl + 1) \
+        ]
+    ]
+    [
+        #rendered-pages \
+        #rendered-entries
+    ]
 }
 
 /**
@@ -97,15 +120,13 @@
         )
     }
 
+    // panic(dict)
     for initial in dict.keys().sorted() {
         heading(level: 2, numbering: none, outlined: false, initial)
         let entry = dict.at(initial)
-        for idx in entry.keys().sorted() [
-            #idx
-            #box(width: 1fr)
-            #let pages = entry.at(idx).at("pages", default: ())
-            #pages.map(make-link).join(", ") \
-        ]
+        for idx in entry.keys().sorted() {
+            render-entry(idx, entry.at(idx), 0)
+        }
     }
 })
 

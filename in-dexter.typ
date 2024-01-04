@@ -30,6 +30,8 @@
             input.text
         } else if input.has("children") {
             input.children.map(child => as-text(child)).join("")
+        } else if input.has("body") {
+            as-text(input.body)
         } else {
             panic("Encountered content without 'text' or 'children' field: " + repr(input))
         }
@@ -108,7 +110,7 @@
  * internal function to format a plain or nested entry
  */
 #let render-entry(idx, entries, lvl) = {
-    let pages = entries.at("patges", default: ())
+    let pages = entries.at("pages", default: ())
     let rendered-pages = [
         #box(width: lvl * 1em)#idx#box(width: 1fr)#pages.map(render-link).join(", ") \
     ]

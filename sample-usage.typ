@@ -52,9 +52,9 @@ version.
 
 == Marking of Entries
 
-We have marked several words to be included in an index page at the end of the document.
-The markup for the entry stays invisible#index[Invisible]. Its location in
-the text gets recorded, and later it is shown as a page reference in the index page.#index([Index Page])
+We have marked several words to be included in an index page at the end of the document. The markup
+for the entry stays invisible#index[Invisible]. Its location in the text gets recorded, and later it
+is shown as a page reference in the index page.#index([Index Page])
 
 ```typ
     #index[The Entry Phrase]
@@ -120,9 +120,6 @@ of course this can be abstracted into a helper function
 
 #let index-bold(..entries) = index(fmt: strong, ..entries)
 
-#pagebreak()
-
-
 == The Index Page
 
 #index[Index Page]
@@ -156,9 +153,16 @@ thoroughly#index[Thoroughly] or merely noteworthy #index[Noteworthy] mentioned (
 index. Here we just need to have as many index entries#index[Entries] as possible to
 demonstrate#index-bold([Demonstrate]) (using a custom made `index-bold` function) the functionality
 #index[Functionality] and have a properly#index[Properly] filled index at the end. Even for symbols
-like `(ρ)`.#index([$(rho)$], initial: (letter: "Symbols", sort-by: "#"))
+like `(ρ)`.#index([$(rho)$], initial: (letter: "Symbols", sort-by: "#")) Indexing should work for
+for any Unicode string like Cyrillic (Скороспелка#index(initial: (letter: "С", sort-by: "Ss"),
+"Скороспелка")) or German (Ölrückstoßabdämpfung).#index(initial: (letter: "Ö", sort-by: "Oo"),
+"Ölrückstoßabdämpfung") - though we need to add initials
+`#index(initial: (letter: "С", sort-by: "Ss"), "Скороспелка")` or
+`#index(initial: (letter: "Ö", sort-by: "Oo"), "Ölrückstoßabdämpfung")`.
 
 #line(length: 100%, stroke: .1pt + gray)
+
+#pagebreak()
 
 = Index
 

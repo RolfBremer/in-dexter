@@ -43,7 +43,7 @@ breaking changes #index[Breaking Changes] in its next iteration.
 The package is also available via Typst's build-in Package Manager:
 
 ```typ
-    #import "@preview/in-dexter:0.0.6": *
+    #import "@preview/in-dexter:0.1.0": *
 ```
 
 Note, that the version number of the typst package has to be adapted to get the wanted
@@ -53,14 +53,48 @@ version.
 == Marking of Entries
 
 We have marked several words to be included in an index page at the end of the document.
-#index[Sample] The markup for the entry stays invisible#index[Invisible]. Its location in
-the text gets recorded, and later it is shown as a page reference in the index page.
-#index[Index Page]
+The markup for the entry stays invisible#index[Invisible]. Its location in
+the text gets recorded, and later it is shown as a page reference in the index page.#index([Index Page])
 
 ```typ
     #index[The Entry Phrase]
 ```
 
+or
+
+```typ
+    #index([The Entry Phrase])
+```
+
+or
+
+```typ
+    #index("The Entry Phrase")
+```
+
+== Advanced entries
+
+=== Symbols
+
+Symbols can be indexed to be sorted under `"Symbols"`, and be sorted at the top of the index like this
+
+```typ
+    #index(initial: (letter: "Symbols", sorty-by: "#"), [$(rho)$])
+```
+
+=== Nested entries
+
+Entries can be nested. The `index` function takes multiple arguments - one for each nesting level.
+
+```typ
+    #index("Sample", "medical", "blood")
+    #index("Sample", "medical", "tissue")
+    #index("Sample", "musical", "piano")
+```
+
+#index("Sample", "medical", "blood")
+#index("Sample", "medical", "tissue")
+#index("Sample", "musical", "piano")
 
 === Formatting Entries
 
@@ -72,11 +106,19 @@ Entries can be formatted with arbitrary functions that map `content` to `content
     #index(fmt: it => strong(it), [The Entry Phrase])
 ```
 
-or
+or shorter
 
 ```typ
     #index(fmt: strong, [The Entry Phrase])
 ```
+
+of course this can be abstracted into a helper function
+
+```typ
+    #let index-bold(..entries) = index(fmt: strong, entries)
+```
+
+#let index-bold(..entries) = index(fmt: strong, ..entries)
 
 #pagebreak()
 
@@ -99,23 +141,22 @@ environment#index[Environment], like this:
 = Why Having an Index in Times of Search Functionality?
 
 #index(fmt: strong, [Searching vs. Index])
-//
-A _hand-picked_ #index[Hand Picked] or _handcrafted_ #index[Handcrafted] Index in times of
-search functionality #index[Search Functionality] seems a bit old-fashioned
-#index[Old-fashioned] at the first glance. But such an index allows the author to direct
-the reader, who is looking for a specific topic#index[Topic], to exactly the right
-places. Especially in larger documents #index[Large Documents] and books #index[Books]
-this becomes very useful, since search engines #index[Search Engines] may provide
-#index[Provide] too many locations of specific words. The index #index[Index] is much more
-comprehensive#index[Comprehensive], assuming that the author #index[Authors responsibility]
-has its content #index[Content] selected well. Authors know best where a
-specific topic is explained #index[Explained] thoroughly #index[Thoroughly] (using the
-`index-main` function to point there) or merely noteworthy #index[Noteworthy] mentioned
-(using the `index` function). Note, that this document is not necessarily a good example
-of the index. Here we just need to have as many index entries #index[Entries] as possible
-to demonstrate #index(fmt: strong, [Demonstrate]) the functionality #index[Functionality]
-and have a properly #index[Properly] filled index at the end. Even for symbols like 
-`(*)`#index(initial: "# Symbols", "(*)").
+
+A _hand-picked_#index[Hand Picked] or _handcrafted_#index[Handcrafted] Index in times of search
+functionality#index[Search Functionality] seems a bit old-fashioned#index[Old-fashioned] at the
+first glance. But such an index allows the author to direct the reader, who is looking for a
+specific topic#index("Topic", "specific"), to exactly the right places. Especially in larger
+documents#index[Large Documents] and books#index[Books] this becomes very useful, since search
+engines#index[Search Engines] may provide#index[Provide] too many locations of specific words.
+The index#index[Index] is much more comprehensive#index[Comprehensive], assuming that the
+author#index[Authors responsibility] has its content#index[Content] selected well. Authors
+know best where a certain topic#index("Topic", "certain") is explained#index[Explained]
+thoroughly#index[Thoroughly] or merely noteworthy #index[Noteworthy] mentioned (using the
+`index` function). Note, that this document is not necessarily a good example of the
+index. Here we just need to have as many index entries#index[Entries] as possible to
+demonstrate#index-bold([Demonstrate]) (using a custom made `index-bold` function) the functionality
+#index[Functionality] and have a properly#index[Properly] filled index at the end. Even for symbols
+like `(ρ)`.#index([$(rho)$], initial: (letter: "Symbols", sort-by: "#"))
 
 #line(length: 100%, stroke: .1pt + gray)
 

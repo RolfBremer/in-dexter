@@ -21,6 +21,7 @@ and fine-tuning.
     * [Brief Sample Document](#brief-sample-document)
     * [Full Sample Document](#full-sample-document)
 * [Changelog](#changelog)
+  * [v0.1.0](#v010)
   * [v0.0.6](#v006)
   * [v0.0.5](#v005)
   * [v0.0.4](#v004)
@@ -38,7 +39,7 @@ Add the following code to the head of the document file(s)
 that want to use the index:
 
 ```typ
-  #import "@preview/in-dexter:0.0.6": *
+  #import "@preview/in-dexter:0.1.0": *
 ```
 
 Alternatively it can be loaded from the file, if you have it copied into your project.
@@ -61,6 +62,15 @@ following sample code, the word "elit" is marked to be included into the index.
 = Sample Text
 Lorem ipsum dolor sit amet, consectetur adipiscing #index[elit], sed do eiusmod tempor
 incididunt ut labore et dolore.
+```
+
+Nested entries can be created - the following would create an entry `adipiscing` with sub entry
+`elit`.
+
+```typ
+= Sample Text
+Lorem ipsum dolor sit amet, consectetur adipiscing elit#index("adipiscing", "elit"), sed do eiusmod
+tempor incididunt ut labore et dolore.
 ```
 
 The marking, by default, is invisible in the resulting text, while the marked word
@@ -207,11 +217,12 @@ A more complex sample PDF is available there as well.
 
 ### v0.1.0
 
-* full refactor
+* big refactor
 * changing "marker classes" to format function `fmt: content -> content` e.g. `index(fmt: strong,
 [entry])`
 * removes `index-main` function
-* allow nested entries
+* nested entries
+* custom initials + custom sorting 
 
 ### v0.0.6
 

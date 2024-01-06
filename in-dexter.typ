@@ -19,7 +19,7 @@
     ))<jkrb_index>
 ])
 
-#let index-main(initial: none, ..entry) = index(fmt: strong, initial: initial, ..entry)
+#let index-main = index.with(fmt:strong)
 
 /**
  * extracts (nested) content or text to content

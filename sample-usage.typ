@@ -112,10 +112,10 @@ or shorter
     #index(fmt: strong, [The Entry Phrase])
 ```
 
-of course this can be abstracted into a helper function
+for convenience in-dexter exposes `index-main` which formats the entry bold.
 
 ```typ
-    #let index-bold(..entries) = index(fmt: strong, entries)
+    #let index-main() = index(fmt: strong, entries)
 ```
 
 #let index-bold(..entries) = index(fmt: strong, ..entries)
@@ -136,13 +136,12 @@ environment#index[Environment], like this:
 
 
 = Why Having an Index in Times of Search Functionality?
-
 #index(fmt: strong, [Searching vs. Index])
 
 A _hand-picked_#index[Hand Picked] or _handcrafted_#index[Handcrafted] Index in times of search
 functionality#index[Search Functionality] seems a bit old-fashioned#index[Old-fashioned] at the
 first glance. But such an index allows the author to direct the reader, who is looking for a
-specific topic#index("Topic", "specific"), to exactly the right places. Especially in larger
+specific topic#index-main("Topic", "specific") (using index-main ), to exactly the right places. Especially in larger
 documents#index[Large Documents] and books#index[Books] this becomes very useful, since search
 engines#index[Search Engines] may provide#index[Provide] too many locations of specific words.
 The index#index[Index] is much more comprehensive#index[Comprehensive], assuming that the

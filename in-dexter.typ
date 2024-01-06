@@ -19,6 +19,8 @@
     ))<jkrb_index>
 ])
 
+#let index-main(initial: none, ..entry) = index(fmt: strong, initial: initial, ..entry)
+
 /**
  * extracts (nested) content or text to content
  */

@@ -21,6 +21,7 @@ and fine-tuning.
     * [Brief Sample Document](#brief-sample-document)
     * [Full Sample Document](#full-sample-document)
 * [Changelog](#changelog)
+  * [v0.1.0](#v010)
   * [v0.0.6](#v006)
   * [v0.0.5](#v005)
   * [v0.0.4](#v004)
@@ -38,7 +39,7 @@ Add the following code to the head of the document file(s)
 that want to use the index:
 
 ```typ
-  #import "@preview/in-dexter:0.0.6": *
+  #import "@preview/in-dexter:0.1.0": *
 ```
 
 Alternatively it can be loaded from the file, if you have it copied into your project.
@@ -61,6 +62,15 @@ following sample code, the word "elit" is marked to be included into the index.
 = Sample Text
 Lorem ipsum dolor sit amet, consectetur adipiscing #index[elit], sed do eiusmod tempor
 incididunt ut labore et dolore.
+```
+
+Nested entries can be created - the following would create an entry `adipiscing` with sub entry
+`elit`.
+
+```typ
+= Sample Text
+Lorem ipsum dolor sit amet, consectetur adipiscing elit#index("adipiscing", "elit"), sed do eiusmod
+tempor incididunt ut labore et dolore.
 ```
 
 The marking, by default, is invisible in the resulting text, while the marked word
@@ -103,22 +113,14 @@ which are marked as "main" entries. Such entries are meant to be the most import
 the given entry. They can be marked as follows:
 
 ```typ
-#index(class: classes.main)[Willkommen]
+#index(fmt: strong, [Willkommen])
 ```
 
-or shorter:
+or you can use the predefined semantically helper function
 
 ```typ
 #index-main[Willkommen]
 ```
-
-Currently, the following classes are supported:
-
-* Simple\
-  This is the default class.
-* Main\
-  This is for important entries. Their page numbers are printed bold in the index page.
-
 
 ### Brief Sample Document
 
@@ -126,7 +128,7 @@ This is a very brief sample to demonstrate how in-dexter can be used. The next c
 contains a more fleshed out sample.
 
 ```typ
-#import "@preview/in-dexter:0.0.6": *
+#import "@preview/in-dexter:0.1.0": *
 
 
 = My Sample Document with `in-dexter`
@@ -146,8 +148,9 @@ This section contains the generated Index.
 ### Full Sample Document
 
 ```typ
-#import "@preview/in-dexter:0.0.6": *
+#import "@preview/in-dexter:0.1.0": *
 
+#let index-main(..args) = index(fmt: strong, ..args)
 
 // Document settings
 #set page("a5")
@@ -211,6 +214,15 @@ A more complex sample PDF is available there as well.
 </span>
 
 ## Changelog
+
+### v0.1.0
+
+* big refactor (by @epsilonhalbe).
+* changing "marker classes" to support direct format
+  function `fmt: content -> content` e.g. `index(fmt: strong, [entry])`.
+* Implemented:
+  * nested entries.
+  * custom initials + custom sorting.
 
 ### v0.0.6
 

@@ -116,10 +116,10 @@ the given entry. They can be marked as follows:
 #index(fmt: strong, [Willkommen])
 ```
 
-or you can define a helper function
+or you can use the predefined semantically helper function
 
 ```typ
-#let index-main(..args) = index(fmt: strong, ..args)
+#index-main[Willkommen]
 ```
 
 ### Brief Sample Document
@@ -217,12 +217,12 @@ A more complex sample PDF is available there as well.
 
 ### v0.1.0
 
-* big refactor
-* changing "marker classes" to format function `fmt: content -> content` e.g. `index(fmt: strong,
-[entry])`
-* removes `index-main` function
-* nested entries
-* custom initials + custom sorting 
+* big refactor (by @epsilonhalbe).
+* changing "marker classes" to support direct format
+  function `fmt: content -> content` e.g. `index(fmt: strong, [entry])`.
+* Implemented:
+  * nested entries.
+  * custom initials + custom sorting.
 
 ### v0.0.6
 

@@ -2,14 +2,13 @@
 // Use of this code is governed by the License in the LICENSE.txt file.
 // For a 'how to use this package', see the accompanying .md, .pdf + .typ documents.
 
-/**
- * adds a new entrty to the index
- * @param fmt: function: content -> content
- * @param initial: "letter" to sort entries under - otherwise first letter of entry is used,
- *        useful for indexing umlauts or accented letters with their unaccented versions or
- *        symbols under a common "Symbols" headline
- * @param ..entry, variable argument to nest index entries (left to right)
- */
+
+// Adds a new entrty to the index
+// @param fmt: function: content -> content
+// @param initial: "letter" to sort entries under - otherwise first letter of entry is used,
+//    useful for indexing umlauts or accented letters with their unaccented versions or
+//    symbols under a common "Symbols" headline
+// @param ..entry, variable argument to nest index entries (left to right)
 #let index(fmt: it => it, initial: none, ..entry) = locate(loc => [
     #metadata((
         fmt: fmt,
@@ -19,11 +18,10 @@
     ))<jkrb_index>
 ])
 
+// Default function to semantically mark main entries in the index
 #let index-main = index.with(fmt:strong)
 
-/**
- * extracts (nested) content or text to content
- */
+// Extracts (nested) content or text to content
 #let as-text(input) = {
     if type(input) == str {
         input
@@ -42,9 +40,8 @@
     }
 }
 
-/**
- * internal function to set plain and nested entries
- */
+
+// Internal function to set plain and nested entries
 #let make-entries(entries, page-link, reg-entry) = {
     let (entry, ..rest) = entries
 
@@ -63,9 +60,7 @@
     reg-entry
 }
 
-/**
- * internal function to collet plain and nested entries into the index
- */
+// Internal function to collet plain and nested entries into the index
 #let references(loc) = {
     let register = (:)
     let initials = (:)
@@ -101,16 +96,14 @@
     (register: register, initials: initials)
 }
 
-/**
- * internal function to format a page link
- */
+
+// Internal function to format a page link
 #let render-link((page, fmt)) = {
     link((page: page, x: 0pt, y: 0pt), fmt[#page])
 }
 
-/**
- * internal function to format a plain or nested entry
- */
+
+// Internal function to format a plain or nested entry
 #let render-entry(idx, entries, lvl) = {
     let pages = entries.at("pages", default: ())
     let rendered-pages = [
@@ -128,11 +121,10 @@
     ]
 }
 
-/**
- * inserts the index into the document
- * @param title (default: none) sets the title of the index to use
- * @param outlined (default: false) if index is shown in outline (table of contents)
- */
+
+// Inserts the index into the document
+// @param title (default: none) sets the title of the index to use
+// @param outlined (default: false) if index is shown in outline (table of contents)
 #let make-index(title: none, outlined: false) = locate(loc => {
     let (register, initials) = references(loc)
 
@@ -153,4 +145,3 @@
         }
     }
 })
-

@@ -14,9 +14,11 @@
     #linebreak() #v(1em)
     #text(size: 16pt)[An index package for Typst]
     #linebreak() #v(.5em)
-    #text(size: 12pt)[Version 0.0.6 (30. September 2023)]
+    #text(size: 12pt)[Version 0.1.0 (7. January 2024)]
     #linebreak() #v(.5em)
     #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
+    #linebreak() #v(.5em)
+    #text(size: 10pt)[Contributors: \@epsilonhalbe, \@sbatial]
     #v(4em)
 ]
 
@@ -72,7 +74,9 @@ or
     #index("The Entry Phrase")
 ```
 
+
 == Advanced entries
+
 
 === Symbols
 
@@ -81,6 +85,7 @@ Symbols can be indexed to be sorted under `"Symbols"`, and be sorted at the top 
 ```typ
     #index(initial: (letter: "Symbols", sorty-by: "#"), [$(rho)$])
 ```
+
 
 === Nested entries
 
@@ -95,6 +100,7 @@ Entries can be nested. The `index` function takes multiple arguments - one for e
 #index("Sample", "medical", "blood")
 #index("Sample", "medical", "tissue")
 #index("Sample", "musical", "piano")
+
 
 === Formatting Entries
 
@@ -112,13 +118,34 @@ or shorter
     #index(fmt: strong, [The Entry Phrase])
 ```
 
-for convenience in-dexter exposes `index-main` which formats the entry bold.
+For convenience in-dexter exposes `index-main` which formats the entry bold. It is
+semantically named to decouple the markup from the actual style. One can decide to have
+the main entries slanted or color formatted, which makes it clear that the style should
+not be part of the function name in markup. Naming markup functions according to their
+purpose (semantically) also eases the burden on the author, because she must not remember
+the currently valid styles for her intent.
+
+Another reason to use semantically markup functions is to have them defined in a central
+place. Changing the style becomes very easy this way.
 
 ```typ
-    #let index-main() = index(fmt: strong, entries)
+    #index-main[The Entry Phrase]
 ```
 
-#let index-bold(..entries) = index(fmt: strong, ..entries)
+It is predefined in in-dexter like this:
+
+```typ
+    #let index-main = index.with(fmt: strong)
+```
+
+Here we define another semantical index marker, which adds an "ff." to the page number.
+
+```typ
+    #let index-ff = index.with(fmt: it => [#it _ff._])
+```
+
+#let index-ff = index.with(fmt: it => [#it _ff._])
+
 
 == The Index Page
 
@@ -138,30 +165,38 @@ environment#index[Environment], like this:
 = Why Having an Index in Times of Search Functionality?
 #index(fmt: strong, [Searching vs. Index])
 
-A _hand-picked_#index[Hand Picked] or _handcrafted_#index[Handcrafted] Index in times of search
-functionality#index[Search Functionality] seems a bit old-fashioned#index[Old-fashioned] at the
-first glance. But such an index allows the author to direct the reader, who is looking for a
-specific topic#index-main("Topic", "specific") (using index-main ), to exactly the right places. Especially in larger
-documents#index[Large Documents] and books#index[Books] this becomes very useful, since search
-engines#index[Search Engines] may provide#index[Provide] too many locations of specific words.
-The index#index[Index] is much more comprehensive#index[Comprehensive], assuming that the
-author#index[Authors responsibility] has its content#index[Content] selected well. Authors
-know best where a certain topic#index("Topic", "certain") is explained#index[Explained]
-thoroughly#index[Thoroughly] or merely noteworthy #index[Noteworthy] mentioned (using the
-`index` function). Note, that this document is not necessarily a good example of the
-index. Here we just need to have as many index entries#index[Entries] as possible to
-demonstrate#index-bold([Demonstrate]) (using a custom made `index-bold` function) the functionality
-#index[Functionality] and have a properly#index[Properly] filled index at the end. Even for symbols
-like `(ρ)`.#index([$(rho)$], initial: (letter: "Symbols", sort-by: "#")) Indexing should work for
-for any Unicode string like Cyrillic (Скороспелка#index(initial: (letter: "С", sort-by: "Ss"),
-"Скороспелка")) or German (Ölrückstoßabdämpfung).#index(initial: (letter: "Ö", sort-by: "Oo"),
-"Ölrückstoßabdämpfung") - though we need to add initials
-`#index(initial: (letter: "С", sort-by: "Ss"), "Скороспелка")` or
-`#index(initial: (letter: "Ö", sort-by: "Oo"), "Ölrückstoßabdämpfung")`.
+A _hand-picked_#index[Hand Picked] or _handcrafted_#index[Handcrafted] Index in times of
+search functionality#index[Search Functionality] seems a bit
+old-fashioned#index[Old-fashioned] at the first glance. But such an index allows the
+author to direct the reader, who is looking for a specific topic#index-main("Topic",
+"specific") (using index-main ), to exactly the right places.
+
+Especially in larger documents#index[Large Documents] and books#index[Books] this becomes
+very useful, since search engines#index[Search Engines] may provide#index[Provide] too
+many locations of specific words. The index#index[Index] is much more
+comprehensive,#index[Comprehensive] assuming that the author#index[Authors responsibility]
+has its content#index[Content] selected well. Authors know best where a certain
+topic#index("Topic", "certain") is explained#index[Explained] thoroughly#index[Thoroughly]
+or merely noteworthy #index[Noteworthy] mentioned (using the `index` function).
+
+Note, that this document is not necessarily a good example of the index. Here we just need
+to have as many index entries#index[Entries] as possible to
+demonstrate#index-ff([Demonstrate]) (using a custom made `index-ff` function) the
+functionality #index[Functionality] and have a properly#index[Properly] filled index at
+the end.
+
+Even for symbols like `(ρ)`.#index([$(rho)$], initial: (letter: "Symbols", sort-by: "#"))
+Indexing should work for for any Unicode string like Cyrillic (Скороспелка#index(initial:
+(letter: "С", sort-by: "Ss"), "Скороспелка")) or German
+(Ölrückstoßabdämpfung).#index(initial: (letter: "Ö", sort-by: "Oo"),
+"Ölrückstoßabdämpfung") - though we need to add initials `#index(initial: (letter: "С",
+sort-by: "Ss"), "Скороспелка")` or `#index(initial: (letter: "Ö", sort-by: "Oo"),
+"Ölrückstoßabdämpfung")`.
 
 #line(length: 100%, stroke: .1pt + gray)
 
 #pagebreak()
+
 
 = Index
 

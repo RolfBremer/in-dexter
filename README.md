@@ -135,7 +135,7 @@ contains a more fleshed out sample.
 
 In this document the usage of the `in-dexter` package is demonstrated to create
 a hand picked #index[Hand Picked] index. This sample #index-main[Sample]
-document #index[Document] is quite short, and so is it´s index.
+document #index[Document] is quite short, and so is its index.
 
 
 = Index
@@ -161,7 +161,7 @@ This section contains the generated Index.
 
 In this document #index[Document] the usage of the `in-dexter` package #index[Package]
 is demonstrated to create a hand picked index #index-main[Index]. This sample document
-is quite short, and so is it´s index. So to fill this sample with some real text,
+is quite short, and so is its index. So to fill this sample with some real text,
 let´s elaborate on some aspects of a hand picked #index[Hand Picked] index. So, "hand
 picked" means, the entries #index[Entries] in the index are carefully chosen by the
 author(s) of the document to point the reader, who is interested in a specific topic

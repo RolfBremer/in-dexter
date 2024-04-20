@@ -102,6 +102,12 @@ Entries can be nested. The `index` function takes multiple arguments - one for e
 #index("Sample", "musical", "piano")
 
 
+=== Skipping physical pages
+
+If page number 1 is not the first physical page of the document, the parameter `
+use-page-counter` of the make-index() function can be set to `true`. Default is `false`.
+
+
 === Formatting Entries
 
 #index(fmt: strong, [Formatting Entries])

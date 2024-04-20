@@ -21,6 +21,7 @@ and fine-tuning.
     * [Brief Sample Document](#brief-sample-document)
     * [Full Sample Document](#full-sample-document)
 * [Changelog](#changelog)
+  * [v0.2.0](#v020)
   * [v0.1.0](#v010)
   * [v0.0.6](#v006)
   * [v0.0.5](#v005)
@@ -217,6 +218,12 @@ A more complex sample PDF is available there as well.
 </span>
 
 ## Changelog
+
+### v0.2.0
+
+* Allow index to respect unnumbered physical pages at the start of the
+  document (Thanks to @jewelpit). See "Skipping physical pages" in the
+  sample-usage document.
 
 ### v0.1.0
 

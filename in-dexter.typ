@@ -14,6 +14,7 @@
         fmt: fmt,
         initial: initial,
         location: loc.position(),
+        page-counter: counter(page).display(),
         entry: entry,
     ))<jkrb_index>
 ])
@@ -65,7 +66,7 @@
     let register = (:)
     let initials = (:)
     for indexed in query(<jkrb_index>, loc) {
-        let (entry, fmt, initial, location) = indexed.value
+        let (entry, fmt, initial, location, page-counter) = indexed.value
         let entries = entry.pos().map(as-text)
         if entries.len() == 0 {
             panic("expected entry to have at least one entry to add to the index")
@@ -90,7 +91,7 @@
 
             }
             let reg-entry = register.at(initial-letter, default: (:))
-            register.insert(initial-letter, make-entries(entries, (page: location.page, fmt: fmt), reg-entry))
+            register.insert(initial-letter, make-entries(entries, (page: location.page, fmt: fmt, page-counter: page-counter), reg-entry))
         }
     }
     (register: register, initials: initials)
@@ -98,21 +99,22 @@
 
 
 // Internal function to format a page link
-#let render-link((page, fmt)) = {
-    link((page: page, x: 0pt, y: 0pt), fmt[#page])
+#let render-link(use-page-counter, (page, fmt, page-counter)) = {
+    link((page: page, x: 0pt, y: 0pt), fmt[#if use-page-counter { page-counter } else { page }])
 }
 
 
 // Internal function to format a plain or nested entry
-#let render-entry(idx, entries, lvl) = {
+#let render-entry(idx, entries, lvl, use-page-counter) = {
     let pages = entries.at("pages", default: ())
+    let render-function = render-link.with(use-page-counter)
     let rendered-pages = [
-        #box(width: lvl * 1em)#idx#box(width: 1fr)#pages.map(render-link).join(", ") \
+        #box(width: lvl * 1em)#idx#box(width: 1fr)#pages.map(render-function).join(", ") \
     ]
     let sub-entries = entries.at("nested", default: (:))
     let rendered-entries = if sub-entries.keys().len() > 0 [
         #for entry in sub-entries.keys().sorted() [
-            #render-entry(entry, sub-entries.at(entry), lvl + 1)
+            #render-entry(entry, sub-entries.at(entry), lvl + 1, use-page-counter)
         ]
     ]
     [
@@ -125,7 +127,8 @@
 // Inserts the index into the document
 // @param title (default: none) sets the title of the index to use
 // @param outlined (default: false) if index is shown in outline (table of contents)
-#let make-index(title: none, outlined: false) = locate(loc => {
+// @param use-page-counter (default: false) use the value of the page counter for page number text
+#let make-index(title: none, outlined: false, use-page-counter: false) = locate(loc => {
     let (register, initials) = references(loc)
 
     if title != none {
@@ -141,7 +144,7 @@
         heading(level: 2, numbering: none, outlined: false, letter)
         let entry = register.at(letter)
         for idx in entry.keys().sorted() {
-            render-entry(idx, entry.at(idx), 0)
+            render-entry(idx, entry.at(idx), 0, use-page-counter)
         }
     }
 })

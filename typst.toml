@@ -7,4 +7,5 @@ description = "Hand Picked Index for Typst."
 entrypoint = "in-dexter.typ"
 repository = "https://github.com/RolfBremer/in-dexter"
 keywords = [ "index", "metadata" ]
-exclude = [ "/gallery/*", "sample-usage.*", ".git*" ]
+categories = [ "components" ]
+exclude = [ "/gallery", "sample-usage.*", ".git*" ]

@@ -45,7 +45,7 @@ breaking changes #index[Breaking Changes] in its next iteration.
 The package is also available via Typst's build-in Package Manager:
 
 ```typ
-    #import "@preview/in-dexter:0.1.0": *
+    #import "@preview/in-dexter:0.2.0": *
 ```
 
 Note, that the version number of the typst package has to be adapted to get the wanted

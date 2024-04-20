@@ -40,7 +40,7 @@ Add the following code to the head of the document file(s)
 that want to use the index:
 
 ```typ
-  #import "@preview/in-dexter:0.1.0": *
+  #import "@preview/in-dexter:0.2.0": *
 ```
 
 Alternatively it can be loaded from the file, if you have it copied into your project.
@@ -132,7 +132,7 @@ This is a very brief sample to demonstrate how in-dexter can be used. The next c
 contains a more fleshed out sample.
 
 ```typ
-#import "@preview/in-dexter:0.1.0": *
+#import "@preview/in-dexter:0.2.0": *
 
 
 = My Sample Document with `in-dexter`
@@ -152,7 +152,7 @@ This section contains the generated Index.
 ### Full Sample Document
 
 ```typ
-#import "@preview/in-dexter:0.1.0": *
+#import "@preview/in-dexter:0.2.0": *
 
 #let index-main(..args) = index(fmt: strong, ..args)
 

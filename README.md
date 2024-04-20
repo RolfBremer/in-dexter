@@ -98,7 +98,7 @@ The `make-index()` function takes three optional arguments: `title`, `outlined`,
 
 * `title` adds a title (with `heading`) and
 * `outlined` is `false` by default and is passed to the heading function
-* `use-page-counter` is `false` by default and will use `counter(page).display()` for the page
+* `use-page-counter` is `false` by default. If set to `true` it will use `counter(page).display()` for the page
     number text in the index instead of the absolute page position (the absolute position is still
     used for the actual link target)
 

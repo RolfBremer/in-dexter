@@ -3,16 +3,17 @@
 // For a 'how to use this package', see the accompanying .md, .pdf + .typ documents.
 
 
-// Adds a new entrty to the index
+// Adds a new entry to the index
 // @param fmt: function: content -> content
 // @param initial: "letter" to sort entries under - otherwise first letter of entry is used,
 //    useful for indexing umlauts or accented letters with their unaccented versions or
 //    symbols under a common "Symbols" headline
 // @param ..entry, variable argument to nest index entries (left to right)
-#let index(fmt: it => it, initial: none, ..entry) = locate(loc => [
+#let index(fmt: it => it, initial: none, index: "Default", ..entry) = locate(loc => [
     #metadata((
         fmt: fmt,
         initial: initial,
+        index-name: index,
         location: loc.position(),
         page-counter: counter(page).display(),
         entry: entry,
@@ -61,12 +62,14 @@
     reg-entry
 }
 
-// Internal function to collet plain and nested entries into the index
-#let references(loc) = {
+// Internal function to collect plain and nested entries into the index
+#let references(loc, indexes) = {
     let register = (:)
     let initials = (:)
     for indexed in query(<jkrb_index>, loc) {
-        let (entry, fmt, initial, location, page-counter) = indexed.value
+        let (entry, fmt, initial, index-name, location, page-counter) = indexed.value
+        if (indexes != auto) and (not  indexes.contains(index-name)) { continue }
+
         let entries = entry.pos().map(as-text)
         if entries.len() == 0 {
             panic("expected entry to have at least one entry to add to the index")
@@ -128,8 +131,13 @@
 // @param title (default: none) sets the title of the index to use
 // @param outlined (default: false) if index is shown in outline (table of contents)
 // @param use-page-counter (default: false) use the value of the page counter for page number text
-#let make-index(title: none, outlined: false, use-page-counter: false) = locate(loc => {
-    let (register, initials) = references(loc)
+// @param indexes (default: auto) optional name(s) of the index(es) to use. Auto uses all indexes.
+#let make-index(title: none,
+                outlined: false,
+                use-page-counter: false,
+                indexes: auto) = locate(loc => {
+
+    let (register, initials) = references(loc, indexes)
 
     if title != none {
         heading(

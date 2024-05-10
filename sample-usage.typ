@@ -4,9 +4,9 @@
 #set text(lang: "en", font: "Arial", size: 10pt)
 #set heading(numbering: "1.1")
 
-// Index-Entry hiding : this rule makes the index entries in the document invisible.
-#show figure.where(kind: "jkrb_index"): it => {}
-
+// Defining handy names for separate indexes to use with in-dexter.
+#let index2 = index.with(index:"Secondary")
+#let index3 = index.with(index:"Tertiary")
 
 // Front Matter
 #align(center)[
@@ -14,7 +14,7 @@
     #linebreak() #v(1em)
     #text(size: 16pt)[An index package for Typst]
     #linebreak() #v(.5em)
-    #text(size: 12pt)[Version 0.1.0 (7. January 2024)]
+    #text(size: 12pt)[Version 0.3.0 (10. Mai 2024)]
     #linebreak() #v(.5em)
     #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
     #linebreak() #v(.5em)
@@ -22,13 +22,14 @@
     #v(4em)
 ]
 
+
 = Sample Document to Demonstrate the in-dexter package
 
 Using the in-dexter package in a typst document consists of some simple steps:
 
 + Importing the package `in-dexter`.
-+ Marking the words or phrases to include in the index.
-+ Generating the index page by calling the `make-index()` function.
++ Marking the words or phrases to include in an index.
++ Generating the index page(s) by calling the `make-index()` function.
 
 
 == Importing the Package
@@ -54,9 +55,9 @@ version.
 
 == Marking of Entries
 
-We have marked several words to be included in an index page at the end of the document. The markup
-for the entry stays invisible#index[Invisible]. Its location in the text gets recorded, and later it
-is shown as a page reference in the index page.#index([Index Page])
+We have marked several words to be included in an index page. The markup for the entry
+stays invisible#index[Invisible]. Its location in the text gets recorded, and later it is
+shown as a page reference in the index page.#index([Index Page])
 
 ```typ
     #index[The Entry Phrase]
@@ -73,6 +74,26 @@ or
 ```typ
     #index("The Entry Phrase")
 ```
+
+Entries marked this way are going to the "Default" Index. If only one index is needed, this
+is the only way needed to mark entries. In-dexter can support muiltiple Indexes. To
+specify the target index for a marking, the index must be addressed.
+
+```typ
+    #index(index: "Secondary")[The Entry Phrase]
+```
+
+This is the explicit adressing of the secondary index.
+It may be useful to define a function for the alternate index, to avoid the explicitness:
+
+
+```typ
+    #let index2 = index.with(index:"Secondary")
+
+    #index2[One Entry Phrase]
+    #index2[Another Entry Phrase]
+```
+
 
 
 == Advanced entries
@@ -167,6 +188,16 @@ environment#index[Environment], like this:
     ]
 ```
 
+The `make-index()` function accepts an optional array of indexes to include into the index
+page. The default value, `auto`, takes all entries from all indexes.  The following sample
+only uses the entries of the secondary and tertiary index. See sample output in
+@combinedIndex.
+
+```typ
+    #columns(3)[
+        #make-index(indexes: ("Secondary", "Tertiary"))
+    ]
+```
 
 = Why Having an Index in Times of Search Functionality?
 #index(fmt: strong, [Searching vs. Index])
@@ -178,17 +209,18 @@ author to direct the reader, who is looking for a specific topic#index-main("Top
 "specific") (using index-main ), to exactly the right places.
 
 Especially in larger documents#index[Large Documents] and books#index[Books] this becomes
-very useful, since search engines#index[Search Engines] may provide#index[Provide] too
-many locations of specific words. The index#index[Index] is much more
-comprehensive,#index[Comprehensive] assuming that the author#index[Authors responsibility]
-has its content#index[Content] selected well. Authors know best where a certain
-topic#index("Topic", "certain") is explained#index[Explained] thoroughly#index[Thoroughly]
-or merely noteworthy #index[Noteworthy] mentioned (using the `index` function).
+very useful, since search engines#index[Search Engines]#index3[Engines] may
+provide#index[Provide] too many locations of specific#index2[specific] words. The
+index#index[Index] is much more comprehensive,#index[Comprehensive] assuming that the
+author#index[Authors responsibility] has its content#index[Content] selected well. Authors
+know best where a certain topic#index("Topic", "certain") is explained#index[Explained]
+thoroughly#index[Thoroughly] or merely noteworthy #index[Noteworthy] mentioned (using the
+`index` function).
 
-Note, that this document is not necessarily a good example of the index. Here we just need
+Note, that this document is not necessarily a good example#index2[example] of the index. Here we just need
 to have as many index entries#index[Entries] as possible to
 demonstrate#index-ff([Demonstrate]) (using a custom made `index-ff` function) the
-functionality #index[Functionality] and have a properly#index[Properly] filled index at
+functionality #index[Functionality] and have a properly#index[Properly] filled#index3[filled] index at
 the end.
 
 Even for symbols like `(ρ)`.#index([$(rho)$], initial: (letter: "Symbols", sort-by: "#"))
@@ -206,8 +238,42 @@ sort-by: "Ss"), "Скороспелка")` or `#index(initial: (letter: "Ö", so
 
 = Index
 
-Here we generate the Index page in three columns:
+Here we generate the Index page in three columns. The default behavior (auto) is to use all
+indexes together.
 
 #columns(3)[
     #make-index()
+]
+
+#pagebreak()
+
+
+= Secondary Index:
+
+Here we select explicitly only the secondary index.
+
+#columns(3)[
+    #make-index(indexes: "Secondary")
+]
+
+#line(length: 70%)
+
+
+= Tertiary Index
+
+Here we select explicitly only the tertiary index.
+
+#columns(3)[
+    #make-index(indexes: "Tertiary")
+]
+
+#line(length: 70%)
+
+
+= Combined Index<combinedIndex>
+
+Here we select explicitly secondary and tertiary indexes.
+
+#columns(3)[
+    #make-index(indexes: ("Secondary", "Tertiary"))
 ]

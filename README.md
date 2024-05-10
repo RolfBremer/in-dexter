@@ -219,6 +219,11 @@ A more complex sample PDF is available there as well.
 
 ## Changelog
 
+### v0.3.0
+
+* Support multiple named indexes. Also allow the generation of
+  combined index pages.
+
 ### v0.2.0
 
 * Allow index to respect unnumbered physical pages at the start of the

@@ -21,6 +21,7 @@ and fine-tuning.
     * [Brief Sample Document](#brief-sample-document)
     * [Full Sample Document](#full-sample-document)
 * [Changelog](#changelog)
+  * [v0.3.0](#v030)
   * [v0.2.0](#v020)
   * [v0.1.0](#v010)
   * [v0.0.6](#v006)
@@ -40,7 +41,7 @@ Add the following code to the head of the document file(s)
 that want to use the index:
 
 ```typ
-  #import "@preview/in-dexter:0.2.0": *
+  #import "@preview/in-dexter:0.3.0": *
 ```
 
 Alternatively it can be loaded from the file, if you have it copied into your project.
@@ -132,7 +133,7 @@ This is a very brief sample to demonstrate how in-dexter can be used. The next c
 contains a more fleshed out sample.
 
 ```typ
-#import "@preview/in-dexter:0.2.0": *
+#import "@preview/in-dexter:0.3.0": *
 
 
 = My Sample Document with `in-dexter`
@@ -152,7 +153,7 @@ This section contains the generated Index.
 ### Full Sample Document
 
 ```typ
-#import "@preview/in-dexter:0.2.0": *
+#import "@preview/in-dexter:0.3.0": *
 
 #let index-main(..args) = index(fmt: strong, ..args)
 
@@ -224,6 +225,14 @@ A more complex sample PDF is available there as well.
 * Support multiple named indexes. Also allow the generation of
   combined index pages.
 * Support for LaTeX index group syntax (`#index("Group1!Group2@Entry"`).
+* Support for advanced case handling for the entries in the index. 
+  Note: The new default ist to ignore the casing for the sorting of the entries.
+  The behavior can be changed by providing a `sort-order()` function to the
+  `make-index` function.
+* The casing for the index entry can also be altered by providing a  
+  `entry-casing()` function to the `make-index` function. So it is possible
+  to have all entries have an uppercase first letter, for example, which is 
+  also the new default!
 
 ### v0.2.0
 

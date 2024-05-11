@@ -46,7 +46,7 @@ breaking changes #index[Breaking Changes] in its next iteration.
 The package is also available via Typst's build-in Package Manager:
 
 ```typ
-    #import "@preview/in-dexter:0.2.0": *
+    #import "@preview/in-dexter:0.3.0": *
 ```
 
 Note, that the version number of the typst package has to be adapted to get the wanted
@@ -270,7 +270,7 @@ Here we generate the Index page in three columns. The default behavior (auto) is
 indexes together.
 
 #columns(3)[
-    #make-index(use-bang-grouping: true)
+    #make-index(use-bang-grouping: true, sort-order: upper)
 ]
 
 #pagebreak()
@@ -304,4 +304,17 @@ Here we select explicitly secondary and tertiary indexes.
 
 #columns(3)[
     #make-index(indexes: ("Secondary", "Tertiary"), use-bang-grouping: true)
+]
+
+#line(length: 70%)
+
+
+= Combined Index - all lower case
+
+Here we select explicitly secondary and tertiary indexes and format them all lower case.
+
+#columns(3)[
+    #make-index(indexes: ("Secondary", "Tertiary"),
+                entry-casing: lower,
+                use-bang-grouping: true)
 ]

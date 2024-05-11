@@ -1,4 +1,4 @@
-// Copyright 2023 Rolf Bremer, Jutta Klebe
+// Copyright 2023, 2024 Rolf Bremer, Jutta Klebe
 // Use of this code is governed by the License in the LICENSE.txt file.
 // For a 'how to use this package', see the accompanying .md, .pdf + .typ documents.
 
@@ -80,7 +80,7 @@
 }
 
 // Internal function to collect plain and nested entries into the index
-#let references(loc, indexes, use-bang-grouping) = {
+#let references(loc, indexes, use-bang-grouping, sort-order) = {
     let register = (:)
     let initials = (:)
     for indexed in query(<jkrb_index>, loc) {
@@ -92,17 +92,17 @@
             panic("expected entry to have at least one entry to add to the index")
         } else {
             let initial-letter = if initial == none {
-                let first-letter = entries.first().first()
+                let first-letter = sort-order(entries.first().first())
                 initials.insert(first-letter, first-letter)
                 first-letter
             } else {
                 if (type(initial) == dictionary) {
-                    let letter = initial.at("letter")
+                    let letter = sort-order(initial.at("letter"))
                     let sort-by = initial.at("sort-by", default: letter)
                     initials.insert(sort-by, letter)
                     letter
                 } else if (type(initial) == string) {
-                    let first-letter = initial.first()
+                    let first-letter = sort-order(initial.first())
                     initials.insert(first-letter, first-letter)
 
                 } else {
@@ -124,17 +124,24 @@
 }
 
 
+// First letter casing
+#let first-letter-up(entry) = {
+    if entry.len() > 0 {
+        upper(entry.first()) + entry.clusters().slice(1).join()
+    }
+}
+
 // Internal function to format a plain or nested entry
-#let render-entry(idx, entries, lvl, use-page-counter) = {
+#let render-entry(idx, entries, lvl, use-page-counter, sort-order, entry-casing) = {
     let pages = entries.at("pages", default: ())
     let render-function = render-link.with(use-page-counter)
     let rendered-pages = [
-        #box(width: lvl * 1em)#idx#box(width: 1fr)#pages.map(render-function).join(", ") \
+        #box(width: lvl * 1em)#entry-casing(idx)#box(width: 1fr)#pages.map(render-function).join(", ") \
     ]
     let sub-entries = entries.at("nested", default: (:))
     let rendered-entries = if sub-entries.keys().len() > 0 [
-        #for entry in sub-entries.keys().sorted() [
-            #render-entry(entry, sub-entries.at(entry), lvl + 1, use-page-counter)
+        #for entry in sub-entries.keys().sorted(key: sort-order) [
+            #render-entry(entry-casing(entry), sub-entries.at(entry), lvl + 1, use-page-counter, sort-order, entry-casing)
         ]
     ]
     [
@@ -154,9 +161,11 @@
                 outlined: false,
                 use-page-counter: false,
                 use-bang-grouping: false,
+                sort-order: k => upper(k),
+                entry-casing: k => first-letter-up(k),
                 indexes: auto) = locate(loc => {
 
-    let (register, initials) = references(loc, indexes, use-bang-grouping)
+    let (register, initials) = references(loc, indexes, use-bang-grouping, sort-order)
 
     if title != none {
         heading(
@@ -170,8 +179,9 @@
         let letter = initials.at(initial)
         heading(level: 2, numbering: none, outlined: false, letter)
         let entry = register.at(letter)
-        for idx in entry.keys().sorted() {
-            render-entry(idx, entry.at(idx), 0, use-page-counter)
+        // sort entries
+        for idx in entry.keys().sorted(key: sort-order) {
+            render-entry(idx, entry.at(idx), 0, use-page-counter, sort-order, entry-casing)
         }
     }
 })

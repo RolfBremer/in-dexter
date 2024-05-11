@@ -223,6 +223,7 @@ A more complex sample PDF is available there as well.
 
 * Support multiple named indexes. Also allow the generation of
   combined index pages.
+* Support for LaTeX index group syntax (`#index("Group1!Group2@Entry"`).
 
 ### v0.2.0
 

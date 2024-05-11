@@ -14,7 +14,7 @@
     #linebreak() #v(1em)
     #text(size: 16pt)[An index package for Typst]
     #linebreak() #v(.5em)
-    #text(size: 12pt)[Version 0.3.0 (10. Mai 2024)]
+    #text(size: 12pt)[Version 0.3.0 (11. Mai 2024)]
     #linebreak() #v(.5em)
     #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
     #linebreak() #v(.5em)
@@ -121,6 +121,34 @@ Entries can be nested. The `index` function takes multiple arguments - one for e
 #index("Sample", "medical", "blood")
 #index("Sample", "medical", "tissue")
 #index("Sample", "musical", "piano")
+
+
+==== LaTeX Style index grouping
+
+Alternatively or complementing to the grouping syntax above, the "bang style" syntax known
+from LaTeX can be used:
+
+// TODO: Make nice samples
+```typ
+    #index("Sample!mediacal!X-Ray")
+```
+
+#index("Sample!medical!X-Ray")
+
+They can even be combined:
+
+```typ
+    #index("Combigroup", "Sample!musical!Chess!")
+```
+
+#index("Combigroup", "Sample!musical!Chess!")
+
+Note that the last bang is not handled as a separator, but is part of the entry.
+To use the bang grouping syntax, the `make-index()` function must be called with the parameter `use-bang-grouping: true`:
+
+```typ
+    #make-index(use-bang-grouping: true)
+```
 
 
 === Skipping physical pages
@@ -242,7 +270,7 @@ Here we generate the Index page in three columns. The default behavior (auto) is
 indexes together.
 
 #columns(3)[
-    #make-index()
+    #make-index(use-bang-grouping: true)
 ]
 
 #pagebreak()
@@ -253,7 +281,7 @@ indexes together.
 Here we select explicitly only the secondary index.
 
 #columns(3)[
-    #make-index(indexes: "Secondary")
+    #make-index(indexes: "Secondary", use-bang-grouping: true)
 ]
 
 #line(length: 70%)
@@ -264,7 +292,7 @@ Here we select explicitly only the secondary index.
 Here we select explicitly only the tertiary index.
 
 #columns(3)[
-    #make-index(indexes: "Tertiary")
+    #make-index(indexes: "Tertiary", use-bang-grouping: true)
 ]
 
 #line(length: 70%)
@@ -275,5 +303,5 @@ Here we select explicitly only the tertiary index.
 Here we select explicitly secondary and tertiary indexes.
 
 #columns(3)[
-    #make-index(indexes: ("Secondary", "Tertiary"))
+    #make-index(indexes: ("Secondary", "Tertiary"), use-bang-grouping: true)
 ]

@@ -2,12 +2,12 @@
 // Use of this code is governed by the License in the LICENSE.txt file.
 // For a 'how to use this package', see the accompanying .md, .pdf + .typ documents.
 
-
 // Adds a new entry to the index
 // @param fmt: function: content -> content
 // @param initial: "letter" to sort entries under - otherwise first letter of entry is used,
 //    useful for indexing umlauts or accented letters with their unaccented versions or
 //    symbols under a common "Symbols" headline
+// @param index: Name of the index to add the entry to. Default is "Default".
 // @param ..entry, variable argument to nest index entries (left to right)
 #let index(fmt: it => it, initial: none, index: "Default", ..entry) = locate(loc => [
     #metadata((
@@ -44,12 +44,29 @@
 
 
 // Internal function to set plain and nested entries
-#let make-entries(entries, page-link, reg-entry) = {
+#let make-entries(entries, page-link, reg-entry, use-bang-grouping) = {
+    // Handling LaTeX nested entry syntax
+    if use-bang-grouping and entries.len() == 1 {
+        let entry = entries.at(0)
+        if entry.len()>0 {
+            entries = entry.split("!")
+            if entries.last() == "" {
+                let x = entries.position(e => e == "")
+                let xx = 0
+                if x != none {
+                    xx = entries.len() - x
+                }
+                entries = entries.filter(e => e != "")
+                entries.last() = entries.last() + "!" * xx
+            }
+        }
+    }
+
     let (entry, ..rest) = entries
 
     if rest.len() > 0 {
         let nested-entries = reg-entry.at(entry, default: (:))
-        let ref = make-entries(rest, page-link, nested-entries.at("nested", default: (:)))
+        let ref = make-entries(rest, page-link, nested-entries.at("nested", default: (:)), use-bang-grouping)
         nested-entries.insert("nested", ref)
         reg-entry.insert(entry, nested-entries)
     } else {
@@ -63,7 +80,7 @@
 }
 
 // Internal function to collect plain and nested entries into the index
-#let references(loc, indexes) = {
+#let references(loc, indexes, use-bang-grouping) = {
     let register = (:)
     let initials = (:)
     for indexed in query(<jkrb_index>, loc) {
@@ -94,7 +111,7 @@
 
             }
             let reg-entry = register.at(initial-letter, default: (:))
-            register.insert(initial-letter, make-entries(entries, (page: location.page, fmt: fmt, page-counter: page-counter), reg-entry))
+            register.insert(initial-letter, make-entries(entries, (page: location.page, fmt: fmt, page-counter: page-counter), reg-entry, use-bang-grouping))
         }
     }
     (register: register, initials: initials)
@@ -128,16 +145,18 @@
 
 
 // Inserts the index into the document
-// @param title (default: none) sets the title of the index to use
-// @param outlined (default: false) if index is shown in outline (table of contents)
-// @param use-page-counter (default: false) use the value of the page counter for page number text
+// @param title (default: none) sets the title of the index to use.
+// @param outlined (default: false) if index is shown in outline (table of contents).
+// @param use-page-counter (default: false) use the value of the page counter for page number text.
+// @param use-bang-grouping (default: false) support the LaTeX bang grouping syntax.
 // @param indexes (default: auto) optional name(s) of the index(es) to use. Auto uses all indexes.
 #let make-index(title: none,
                 outlined: false,
                 use-page-counter: false,
+                use-bang-grouping: false,
                 indexes: auto) = locate(loc => {
 
-    let (register, initials) = references(loc, indexes)
+    let (register, initials) = references(loc, indexes, use-bang-grouping)
 
     if title != none {
         heading(

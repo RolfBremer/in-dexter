@@ -220,6 +220,11 @@ A more complex sample PDF is available there as well.
 
 ## Changelog
 
+### v0.3.2
+
+* Fix initial parsing and returning fist letter (thanks to @lukasjuhrich, #14)
+
+
 ### v0.3.1
 
 * Fix handling of trailing or multiple spaces and crlf in index entries.

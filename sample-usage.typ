@@ -108,6 +108,15 @@ Symbols can be indexed to be sorted under `"Symbols"`, and be sorted at the top 
 ```
 
 
+Here is a sample entry with a math symbol to be indext under "t":
+
+```typ
+    #index(initial: "t")[$t$-tuple]
+```
+
+#index(initial: "t")[$t$-tuple]
+
+
 === Nested entries
 
 Entries can be nested. The `index` function takes multiple arguments - one for each nesting level.

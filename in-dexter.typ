@@ -104,7 +104,7 @@
                 } else if (type(initial) == str) {
                     let first-letter = sort-order(initial.first())
                     initials.insert(first-letter, first-letter)
-
+                    first-letter
                 } else {
                     panic("Expected initial to be either a 'string' or '(letter: <string>, sort-by: <none|string>)'")
                 }

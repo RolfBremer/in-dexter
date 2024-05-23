@@ -220,6 +220,10 @@ A more complex sample PDF is available there as well.
 
 ## Changelog
 
+### v0.3.1
+
+* Fix handling of trailing or multiple spaces and crlf in index entries.
+
 ### v0.3.0
 
 * Support multiple named indexes. Also allow the generation of

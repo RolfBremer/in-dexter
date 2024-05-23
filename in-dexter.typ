@@ -35,7 +35,7 @@
         } else if input.has("body") {
             as-text(input.body)
         } else {
-            panic("Encountered content without 'text' or 'children' field: " + repr(input))
+            " "
         }
     } else {
         panic("Unexpected entry type " + type(input) + " of " + repr(input))

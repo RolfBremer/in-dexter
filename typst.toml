@@ -1,6 +1,6 @@
 [package]
 name = "in-dexter"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["JKRB <https://github.com/RolfBremer>", "in-dexter Contributors"]
 license = "Apache-2.0"
 description = "Hand Picked Index for Typst."

@@ -101,7 +101,7 @@
                     let sort-by = initial.at("sort-by", default: letter)
                     initials.insert(sort-by, letter)
                     letter
-                } else if (type(initial) == string) {
+                } else if (type(initial) == str) {
                     let first-letter = sort-order(initial.first())
                     initials.insert(first-letter, first-letter)
 

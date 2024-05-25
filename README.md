@@ -21,6 +21,9 @@ and fine-tuning.
     * [Brief Sample Document](#brief-sample-document)
     * [Full Sample Document](#full-sample-document)
 * [Changelog](#changelog)
+  * [v0.4.0](#v040)
+  * [v0.3.2](#v032)
+  * [v0.3.1](#v031)
   * [v0.3.0](#v030)
   * [v0.2.0](#v020)
   * [v0.1.0](#v010)
@@ -153,7 +156,7 @@ This section contains the generated Index.
 ### Full Sample Document
 
 ```typ
-#import "@preview/in-dexter:0.3.0": *
+#import "@preview/in-dexter:0.4.0": *
 
 #let index-main(..args) = index(fmt: strong, ..args)
 
@@ -220,10 +223,16 @@ A more complex sample PDF is available there as well.
 
 ## Changelog
 
+### v0.4.0
+
+* Support for a `display` parameter for entries. This allows the usage of complex
+  content, like math expressions in the index. (based on suggestions by @lukasjuhrich)
+* Also support a tuple value for display and key parameters of the entry.
+* Improve internal robustness and fix some errors in the sample document.
+
 ### v0.3.2
 
 * Fix initial parsing and returning fist letter (thanks to @lukasjuhrich, #14)
-
 
 ### v0.3.1
 

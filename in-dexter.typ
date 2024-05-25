@@ -8,8 +8,10 @@
 //    useful for indexing umlauts or accented letters with their unaccented versions or
 //    symbols under a common "Symbols" headline
 // @param index: Name of the index to add the entry to. Default is "Default".
-// @param ..entry, variable argument to nest index entries (left to right)
-#let index(fmt: it => it, initial: none, index: "Default", ..entry) = locate(loc => [
+// @param display: If given, this will be the displayed content in the index page (instead of the key entry).
+// @param ..entry, variable argument to nest index entries (left to right). Only the last, rightmost
+// entry is the key for the entry. The others are used for grouping.
+#let index(fmt: it => it, initial: none, index: "Default", display: auto, ..entry) = locate(loc => [
     #metadata((
         fmt: fmt,
         initial: initial,
@@ -17,6 +19,7 @@
         location: loc.position(),
         page-counter: counter(page).display(),
         entry: entry,
+        display: display,
     ))<jkrb_index>
 ])
 
@@ -25,39 +28,52 @@
 
 // Extracts (nested) content or text to content
 #let as-text(input) = {
-    if type(input) == str {
+    let inputtype = type(input)
+    if inputtype == str {
         input
-    } else if type(input) == content {
-        if input.has("text") {
-            input.text
-        } else if input.has("children") {
+    } else if inputtype == content {
+        if input.has("children") {
             input.children.map(child => as-text(child)).join("")
+        } else if input.has("text") {
+            input.text
         } else if input.has("body") {
             as-text(input.body)
         } else {
-            " "
+            input
         }
+    } else if inputtype == arguments {
+        input.pos().join("")
     } else {
-        panic("Unexpected entry type " + type(input) + " of " + repr(input))
+        panic("Unexpected entry type " + inputtype + " of " + repr(input))
     }
 }
 
 
 // Internal function to set plain and nested entries
 #let make-entries(entries, page-link, reg-entry, use-bang-grouping) = {
-    // Handling LaTeX nested entry syntax
+    // Handling LaTeX nested entry syntax (only if it is the last entry)
+
     if use-bang-grouping and entries.len() == 1 {
         let entry = entries.at(0)
-        if entry.len()>0 {
-            entries = entry.split("!")
-            if entries.last() == "" {
-                let x = entries.position(e => e == "")
-                let xx = 0
-                if x != none {
-                    xx = entries.len() - x
+        if type(entry.key) == str and entry.key.len()>0 {
+            let disp = entry.display
+            entries = entry.key.split("!").map(e => {
+                let d = if type(disp) == str and disp.contains(regex("!\w+")) {
+                    e
+                } else {
+                    disp
                 }
-                entries = entries.filter(e => e != "")
-                entries.last() = entries.last() + "!" * xx
+                (display: d, key: e)
+            })
+
+            if entries.last().key == "" {
+                let emptyKeyIndex = entries.position(e => e.key == "")
+                let bangCount = 0
+                if emptyKeyIndex != none {
+                    bangCount = entries.len() - emptyKeyIndex
+                }
+                entries = entries.filter(e => e.key != "")
+                entries.last() = (display: entries.last().display + "!" * bangCount, key: entries.last().key)
             }
         }
     }
@@ -65,15 +81,17 @@
     let (entry, ..rest) = entries
 
     if rest.len() > 0 {
-        let nested-entries = reg-entry.at(entry, default: (:))
+        let nested-entries = reg-entry.at(entry.key, default: (:))
         let ref = make-entries(rest, page-link, nested-entries.at("nested", default: (:)), use-bang-grouping)
         nested-entries.insert("nested", ref)
-        reg-entry.insert(entry, nested-entries)
+        reg-entry.insert(entry.key, nested-entries)
     } else {
-        let pages = reg-entry.at(entry, default: (:)).at("pages", default: ())
+        let key = if type(entry.key) == str { entry.key } else { as-text(entry.key) }
+        if type(key) == content { panic("Entry must be string compatible. Consider specifying as display parameter.") }
+        let pages = reg-entry.at(key, default: (:)).at("pages", default: ())
         if not pages.contains(page-link) {
             pages.push(page-link)
-            reg-entry.insert(entry, ("pages": pages))
+            reg-entry.insert(key, (display: entry.display, "pages": pages))
         }
     }
     reg-entry
@@ -84,15 +102,37 @@
     let register = (:)
     let initials = (:)
     for indexed in query(<jkrb_index>, loc) {
-        let (entry, fmt, initial, index-name, location, page-counter) = indexed.value
+        let (fmt, initial, index-name, location, page-counter, entry, display) = indexed.value
         if (indexes != auto) and (not  indexes.contains(index-name)) { continue }
 
-        let entries = entry.pos().map(as-text)
+        // Handle tuple as (display, key)
+        let entries = entry.pos().map(e => {
+            let disp = if display == auto {
+                e
+            } else {
+                display
+            }
+
+            let k = none
+            if type(e) == array {
+                if e.len() == 2 {
+                    disp = e.at(0)
+                    k = e.at(1)
+                }
+            } else {
+                k = as-text(e)
+            }
+            (display: disp, key: k)
+        })
+
         if entries.len() == 0 {
             panic("expected entry to have at least one entry to add to the index")
         } else {
             let initial-letter = if initial == none {
-                let first-letter = sort-order(entries.first().first())
+                let fe = sort-order(entries.first().at("key", default: "?"))
+                let fe2 = if type(fe) == str { fe } else { as-text(fe) }
+                if type(fe2) != str { panic("Content cannot be converted to string. Use `initial` or `display` parameter for the entry.") }
+                let first-letter = fe2.first()
                 initials.insert(first-letter, first-letter)
                 first-letter
             } else {
@@ -111,7 +151,11 @@
 
             }
             let reg-entry = register.at(initial-letter, default: (:))
-            register.insert(initial-letter, make-entries(entries, (page: location.page, fmt: fmt, page-counter: page-counter), reg-entry, use-bang-grouping))
+            register.insert(initial-letter,
+                            make-entries(entries,
+                                         (page: location.page, fmt: fmt, page-counter: page-counter),
+                                         reg-entry,
+                                         use-bang-grouping))
         }
     }
     (register: register, initials: initials)
@@ -126,22 +170,32 @@
 
 // First letter casing
 #let first-letter-up(entry) = {
-    if entry.len() > 0 {
+    if type(entry) == str and entry.len() > 0 {
         upper(entry.first()) + entry.clusters().slice(1).join()
+    }
+}
+
+#let qentry-casing(display, entry-casing) = {
+    if type(display) == str {
+        entry-casing(display)
+    } else {
+        let a = as-text(display)
+        if type(a) == str { entry-casing(a) } else { a }
     }
 }
 
 // Internal function to format a plain or nested entry
 #let render-entry(idx, entries, lvl, use-page-counter, sort-order, entry-casing) = {
     let pages = entries.at("pages", default: ())
+    let display = entries.at("display", default: idx)
     let render-function = render-link.with(use-page-counter)
     let rendered-pages = [
-        #box(width: lvl * 1em)#entry-casing(idx)#box(width: 1fr)#pages.map(render-function).join(", ") \
+        #box(width: lvl * 1em)#qentry-casing(display, entry-casing)#box(width: 1fr)#pages.map(render-function).join(", ") \
     ]
     let sub-entries = entries.at("nested", default: (:))
     let rendered-entries = if sub-entries.keys().len() > 0 [
         #for entry in sub-entries.keys().sorted(key: sort-order) [
-            #render-entry(entry-casing(entry), sub-entries.at(entry), lvl + 1, use-page-counter, sort-order, entry-casing)
+            #render-entry(qentry-casing(entry, entry-casing), sub-entries.at(entry), lvl + 1, use-page-counter, sort-order, entry-casing)
         ]
     ]
     [
@@ -156,6 +210,9 @@
 // @param outlined (default: false) if index is shown in outline (table of contents).
 // @param use-page-counter (default: false) use the value of the page counter for page number text.
 // @param use-bang-grouping (default: false) support the LaTeX bang grouping syntax.
+// @param sort-order (default: upper) a function to control how the entry is sorted.
+// @param entry-casing (default: first-letter-up) a function to control how the
+//        entry key is displayed (when no display parameter is provided).
 // @param indexes (default: auto) optional name(s) of the index(es) to use. Auto uses all indexes.
 #let make-index(title: none,
                 outlined: false,

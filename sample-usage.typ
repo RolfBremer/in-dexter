@@ -4,9 +4,13 @@
 #set text(lang: "en", font: "Arial", size: 10pt)
 #set heading(numbering: "1.1")
 
-// Defining handy names for separate indexes to use with in-dexter.
+// Defining handy names for separate indexes to use with in-dexter in
+// this document. this is easyer as having to type the index parameter
+// on each entry.
 #let index2 = index.with(index:"Secondary")
 #let index3 = index.with(index:"Tertiary")
+#let indexMath = index.with(index:"Math")
+
 
 // Front Matter
 #align(center)[
@@ -14,16 +18,23 @@
     #linebreak() #v(1em)
     #text(size: 16pt)[An index package for Typst]
     #linebreak() #v(.5em)
-    #text(size: 12pt)[Version 0.3.0 (11. Mai 2024)]
+    #text(size: 12pt)[Version 0.4.0 (25. Mai 2024)]
     #linebreak() #v(.5em)
     #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
     #linebreak() #v(.5em)
-    #text(size: 10pt)[Contributors: \@epsilonhalbe, \@sbatial]
+    #text(size: 10pt)[Contributors: \@epsilonhalbe, \@jewelpit, \@sbatial, \@lukasjuhrich]
     #v(4em)
 ]
 
+// Table of Content
+#outline(indent: true, title: [Content])
+
 
 = Sample Document to Demonstrate the in-dexter package
+
+This document explaines how to use the `ìn-dexter` package in typst. It contains several
+samples of how to use `in-dexter` to effectively index a document. Make sure to look up
+the typst code of this document to explore, what the package can do.
 
 Using the in-dexter package in a typst document consists of some simple steps:
 
@@ -46,7 +57,7 @@ breaking changes #index[Breaking Changes] in its next iteration.
 The package is also available via Typst's build-in Package Manager:
 
 ```typ
-    #import "@preview/in-dexter:0.3.0": *
+    #import "@preview/in-dexter:0.4.0": *
 ```
 
 Note, that the version number of the typst package has to be adapted to get the wanted
@@ -94,29 +105,6 @@ It may be useful to define a function for the alternate index, to avoid the expl
     #index2[Another Entry Phrase]
 ```
 
-
-
-== Advanced entries
-
-
-=== Symbols
-
-Symbols can be indexed to be sorted under `"Symbols"`, and be sorted at the top of the index like this
-
-```typ
-    #index(initial: (letter: "Symbols", sorty-by: "#"), [$(rho)$])
-```
-
-
-Here is a sample entry with a math symbol to be indext under "t":
-
-```typ
-    #index(initial: "t")[$t$-tuple]
-```
-
-#index(initial: "t")[$t$-tuple]
-
-
 === Nested entries
 
 Entries can be nested. The `index` function takes multiple arguments - one for each nesting level.
@@ -160,13 +148,82 @@ To use the bang grouping syntax, the `make-index()` function must be called with
 ```
 
 
-=== Skipping physical pages
+=== Entries with display
 
-If page number 1 is not the first physical page of the document, the parameter `
-use-page-counter` of the make-index() function can be set to `true`. Default is `false`.
+These entries use an explicit display parameter. It is used to display the entry on the
+index page. It can contain rich content, like math expessions:
+
+```typ
+    #index(display: "Level3", "Aaa-set3!l2!l3")
+    #indexMath(display: [$cal(T)_n$-set], "Aa-set")
+    #indexMath(display: [$cal(T)^n$-set], "Aa-set4")
+```
+
+#index(display: "Level3", "Aaa-set3!l2!l3")
+#indexMath(display: [$cal(T)_n$-set], "Aa-set")
+#indexMath(display: [$cal(T)^n$-set], "Aa-set4")
 
 
-=== Formatting Entries
+=== Advanced entries
+
+Simple math expressions can be used as entry key, like the following sample, where we also
+provide an initial parameter to put sort the entry unter "t" in the index:
+
+```typ
+    #indexMath(initial: "t")[$t$-tuple]
+```
+
+#indexMath(initial: "t")[$t$-tuple]
+
+but note, that more complex ones may not be convertible to a string by in-dexter. In such
+cases it is recommended to use the display parameter instead:
+
+```typ
+    #indexMath(initial: "t", display: [$cal(T)_n$-c], "Tnc")
+```
+
+#indexMath(initial: "t", display: [$cal(T)_n$-c], "Tnc")
+
+this will put the entry in the "t" section, and uses the key ("Tnc") as sort key within
+that 't' section. The entry is displayed as `$cal(T)_n$`.
+
+The following entry will place the entry in the "D" section, because we have not provided
+an explicit `initial` parameter, so the section is derived from the keys first letter
+("DTN").
+
+```typ
+    #indexMath(display: [d-$cal(T)_n$], "DTN")
+```
+
+#index(display: [d-$cal(T)_n$], "DTN")
+
+
+The index-function to mark entries also accepts a tuple value:
+
+```typ
+    #indexMath(([d-$rho_x$], "RTX"))
+```
+
+#indexMath(([d-$rho_x$], "RTX"))
+
+The first value of the tuple is interpreted as the `display`, the second as the `key` parameter.
+
+// More samples and tests
+#indexMath(([d-$phi_x^2*sum(d)$], "DPX"))
+
+
+==== Symbols
+
+Symbols can be indexed to be sorted under `"Symbols"`, and be sorted at the top of the index like this
+
+```typ
+    #indexMath(initial: (letter: "Symbols", sort-by: "#"), [$(sigma)$])
+```
+
+#indexMath(initial: (letter: "Symbols", sort-by: "#"), [$(sigma)$])
+
+
+==== Formatting Entries
 
 #index(fmt: strong, [Formatting Entries])
 
@@ -236,6 +293,13 @@ only uses the entries of the secondary and tertiary index. See sample output in
     ]
 ```
 
+=== Skipping physical pages
+
+If page number 1 is not the first physical page#index-main[physical page] of the document, the
+parameter ` use-page-counter` of the `make-index()` function can be set to `true`. Default
+is `false`. In-dexter uses the page counter instead of the physical page number then.
+
+
 = Why Having an Index in Times of Search Functionality?
 #index(fmt: strong, [Searching vs. Index])
 
@@ -254,11 +318,11 @@ know best where a certain topic#index("Topic", "certain") is explained#index[Exp
 thoroughly#index[Thoroughly] or merely noteworthy #index[Noteworthy] mentioned (using the
 `index` function).
 
-Note, that this document is not necessarily a good example#index2[example] of the index. Here we just need
-to have as many index entries#index[Entries] as possible to
+Note, that this document is not necessarily a good example#index2[example] of the index.
+Here we just need to have as many index entries#index[Entries] as possible to
 demonstrate#index-ff([Demonstrate]) (using a custom made `index-ff` function) the
-functionality #index[Functionality] and have a properly#index[Properly] filled#index3[filled] index at
-the end.
+functionality #index[Functionality] and have a properly#index[Properly]
+filled#index3[filled] index at the end.
 
 Even for symbols like `(ρ)`.#index([$(rho)$], initial: (letter: "Symbols", sort-by: "#"))
 Indexing should work for for any Unicode string like Cyrillic (Скороспелка#index(initial:
@@ -273,57 +337,87 @@ sort-by: "Ss"), "Скороспелка")` or `#index(initial: (letter: "Ö", so
 #pagebreak()
 
 
-= Index
+= Index pages
+
+In this chapter we emit several index pages for this document.
+
+// Table of Content from here on
+#context(
+    outline(title: none, target: selector(heading).after(here()))
+)
+
+
+== The Default Index page
 
 Here we generate the Index page in three columns. The default behavior (auto) is to use all
 indexes together.
 
 #columns(3)[
-    #make-index(use-bang-grouping: true, sort-order: upper)
+    #make-index(use-bang-grouping: true,
+                sort-order: upper)
 ]
 
 #pagebreak()
 
 
-= Secondary Index:
+== Secondary Index
 
 Here we select explicitly only the secondary index.
 
 #columns(3)[
-    #make-index(indexes: "Secondary", use-bang-grouping: true)
+    #make-index(indexes: "Secondary", use-bang-grouping: true, sort-order: upper)
 ]
 
 #line(length: 70%)
 
 
-= Tertiary Index
+== Tertiary Index
 
 Here we select explicitly only the tertiary index.
 
 #columns(3)[
-    #make-index(indexes: "Tertiary", use-bang-grouping: true)
+    #make-index(indexes: "Tertiary",
+                use-bang-grouping: true,
+                sort-order: upper)
 ]
 
 #line(length: 70%)
 
 
-= Combined Index<combinedIndex>
+== Combined Index<combinedIndex>
 
 Here we select explicitly secondary and tertiary indexes.
 
 #columns(3)[
-    #make-index(indexes: ("Secondary", "Tertiary"), use-bang-grouping: true)
+    #make-index(indexes: ("Secondary", "Tertiary"),
+                use-bang-grouping: true,
+                sort-order: upper)
 ]
 
 #line(length: 70%)
 
 
-= Combined Index - all lower case
+== Combined Index - all lower case
 
 Here we select explicitly secondary and tertiary indexes and format them all lower case.
 
 #columns(3)[
     #make-index(indexes: ("Secondary", "Tertiary"),
                 entry-casing: lower,
+                use-bang-grouping: true,
+                sort-order: upper)
+]
+
+#line(length: 70%)
+#pagebreak()
+
+
+== Math Index
+
+Here we select explicitly only the Math index.
+
+#columns(3)[
+    #make-index(indexes: ("Math"),
+                sort-order: upper,
                 use-bang-grouping: true)
 ]

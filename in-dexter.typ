@@ -175,7 +175,7 @@
     }
 }
 
-#let qentry-casing(display, entry-casing) = {
+#let apply-entry-casing(display, entry-casing) = {
     if type(display) == str {
         entry-casing(display)
     } else {
@@ -190,12 +190,12 @@
     let display = entries.at("display", default: idx)
     let render-function = render-link.with(use-page-counter)
     let rendered-pages = [
-        #box(width: lvl * 1em)#qentry-casing(display, entry-casing)#box(width: 1fr)#pages.map(render-function).join(", ") \
+        #box(width: lvl * 1em)#apply-entry-casing(display, entry-casing)#box(width: 1fr)#pages.map(render-function).join(", ") \
     ]
     let sub-entries = entries.at("nested", default: (:))
     let rendered-entries = if sub-entries.keys().len() > 0 [
         #for entry in sub-entries.keys().sorted(key: sort-order) [
-            #render-entry(qentry-casing(entry, entry-casing), sub-entries.at(entry), lvl + 1, use-page-counter, sort-order, entry-casing)
+            #render-entry(apply-entry-casing(entry, entry-casing), sub-entries.at(entry), lvl + 1, use-page-counter, sort-order, entry-casing)
         ]
     ]
     [

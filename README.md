@@ -21,6 +21,7 @@ and fine-tuning.
     * [Brief Sample Document](#brief-sample-document)
     * [Full Sample Document](#full-sample-document)
 * [Changelog](#changelog)
+  * [v0.4.1](#v041)
   * [v0.4.0](#v040)
   * [v0.3.2](#v032)
   * [v0.3.1](#v031)
@@ -156,7 +157,7 @@ This section contains the generated Index.
 ### Full Sample Document
 
 ```typ
-#import "@preview/in-dexter:0.4.0": *
+#import "@preview/in-dexter:0.4.1": *
 
 #let index-main(..args) = index(fmt: strong, ..args)
 
@@ -222,6 +223,11 @@ A more complex sample PDF is available there as well.
 </span>
 
 ## Changelog
+
+### v0.4.1
+
+* Bug fixed: Fix a bug where an index entry with same name as a group hides the group.
+* Fixed typos in the sample-usage document.
 
 ### v0.4.0
 

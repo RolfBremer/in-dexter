@@ -5,7 +5,7 @@
 #set heading(numbering: "1.1")
 
 // Defining handy names for separate indexes to use with in-dexter in
-// this document. this is easyer as having to type the index parameter
+// this document. this is easier as having to type the index parameter
 // on each entry.
 #let index2 = index.with(index:"Secondary")
 #let index3 = index.with(index:"Tertiary")
@@ -32,7 +32,7 @@
 
 = Sample Document to Demonstrate the in-dexter package
 
-This document explaines how to use the `ìn-dexter` package in typst. It contains several
+This document explains how to use the `ìn-dexter` package in typst. It contains several
 samples of how to use `in-dexter` to effectively index a document. Make sure to look up
 the typst code of this document to explore, what the package can do.
 
@@ -87,14 +87,14 @@ or
 ```
 
 Entries marked this way are going to the "Default" Index. If only one index is needed, this
-is the only way needed to mark entries. In-dexter can support muiltiple Indexes. To
+is the only way needed to mark entries. In-dexter can support multiple Indexes. To
 specify the target index for a marking, the index must be addressed.
 
 ```typ
     #index(index: "Secondary")[The Entry Phrase]
 ```
 
-This is the explicit adressing of the secondary index.
+This is the explicit addressing of the secondary index.
 It may be useful to define a function for the alternate index, to avoid the explicitness:
 
 
@@ -113,11 +113,13 @@ Entries can be nested. The `index` function takes multiple arguments - one for e
     #index("Sample", "medical", "blood")
     #index("Sample", "medical", "tissue")
     #index("Sample", "musical", "piano")
+    #index("Sample")
 ```
 
 #index("Sample", "medical", "blood")
 #index("Sample", "medical", "tissue")
 #index("Sample", "musical", "piano")
+#index("Sample")
 
 
 ==== LaTeX Style index grouping
@@ -127,7 +129,7 @@ from LaTeX can be used:
 
 // TODO: Make nice samples
 ```typ
-    #index("Sample!mediacal!X-Ray")
+    #index("Sample!medical!X-Ray")
 ```
 
 #index("Sample!medical!X-Ray")
@@ -135,10 +137,10 @@ from LaTeX can be used:
 They can even be combined:
 
 ```typ
-    #index("Combigroup", "Sample!musical!Chess!")
+    #index("CombiGroup", "Sample!musical!Chess!")
 ```
 
-#index("Combigroup", "Sample!musical!Chess!")
+#index("CombiGroup", "Sample!musical!Chess!")
 
 Note that the last bang is not handled as a separator, but is part of the entry.
 To use the bang grouping syntax, the `make-index()` function must be called with the parameter `use-bang-grouping: true`:
@@ -151,7 +153,7 @@ To use the bang grouping syntax, the `make-index()` function must be called with
 === Entries with display
 
 These entries use an explicit display parameter. It is used to display the entry on the
-index page. It can contain rich content, like math expessions:
+index page. It can contain rich content, like math expressions:
 
 ```typ
     #index(display: "Level3", "Aaa-set3!l2!l3")
@@ -307,7 +309,7 @@ A _hand-picked_#index[Hand Picked] or _handcrafted_#index[Handcrafted] Index in 
 search functionality#index[Search Functionality] seems a bit
 old-fashioned#index[Old-fashioned] at the first glance. But such an index allows the
 author to direct the reader, who is looking for a specific topic#index-main("Topic",
-"specific") (using index-main ), to exactly the right places.
+"specific") (using index-main), to exactly the right places.
 
 Especially in larger documents#index[Large Documents] and books#index[Books] this becomes
 very useful, since search engines#index[Search Engines]#index3[Engines] may

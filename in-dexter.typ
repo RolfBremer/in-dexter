@@ -88,11 +88,13 @@
     } else {
         let key = if type(entry.key) == str { entry.key } else { as-text(entry.key) }
         if type(key) == content { panic("Entry must be string compatible. Consider specifying as display parameter.") }
-        let pages = reg-entry.at(key, default: (:)).at("pages", default: ())
+        let current-entry = reg-entry.at(key, default: (display: entry.display, "pages": ()))
+        let pages = current-entry.at("pages", default: ())
         if not pages.contains(page-link) {
             pages.push(page-link)
-            reg-entry.insert(key, (display: entry.display, "pages": pages))
         }
+        current-entry.insert("pages", pages)
+        reg-entry.insert(key, current-entry)
     }
     reg-entry
 }

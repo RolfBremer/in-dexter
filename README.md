@@ -21,6 +21,7 @@ and fine-tuning.
     * [Brief Sample Document](#brief-sample-document)
     * [Full Sample Document](#full-sample-document)
 * [Changelog](#changelog)
+  * [v0.4.2](#v041)
   * [v0.4.1](#v041)
   * [v0.4.0](#v040)
   * [v0.3.2](#v032)
@@ -157,7 +158,7 @@ This section contains the generated Index.
 ### Full Sample Document
 
 ```typ
-#import "@preview/in-dexter:0.4.1": *
+#import "@preview/in-dexter:0.4.2": *
 
 #let index-main(..args) = index(fmt: strong, ..args)
 
@@ -223,6 +224,11 @@ A more complex sample PDF is available there as well.
 </span>
 
 ## Changelog
+
+### v0.4.2
+
+* Improve internal method `as-text` to be more robust.
+* tidy up sample-usage.typ.
 
 ### v0.4.1
 

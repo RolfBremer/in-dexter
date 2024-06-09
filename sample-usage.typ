@@ -18,7 +18,7 @@
     #linebreak() #v(1em)
     #text(size: 16pt)[An index package for Typst]
     #linebreak() #v(.5em)
-    #text(size: 12pt)[Version 0.4.1 (7.6.2024)]
+    #text(size: 12pt)[Version 0.4.2 (9.6.2024)]
     #linebreak() #v(.5em)
     #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
     #linebreak() #v(.5em)
@@ -57,7 +57,7 @@ breaking changes #index[Breaking Changes] in its next iteration.
 The package is also available via Typst's build-in Package Manager:
 
 ```typ
-    #import "@preview/in-dexter:0.4.1": *
+    #import "@preview/in-dexter:0.4.2": *
 ```
 
 Note, that the version number of the typst package has to be adapted to get the wanted
@@ -330,9 +330,14 @@ Even for symbols like `(ρ)`.#index([$(rho)$], initial: (letter: "Symbols", sort
 Indexing should work for for any Unicode string like Cyrillic (Скороспелка#index(initial:
 (letter: "С", sort-by: "Ss"), "Скороспелка")) or German
 (Ölrückstoßabdämpfung).#index(initial: (letter: "Ö", sort-by: "Oo"),
-"Ölrückstoßabdämpfung") - though we need to add initials `#index(initial: (letter: "С",
-sort-by: "Ss"), "Скороспелка")` or `#index(initial: (letter: "Ö", sort-by: "Oo"),
-"Ölrückstoßabdämpfung")`.
+"Ölrückstoßabdämpfung") - though we need to add initials:
+
+`#index(initial: (letter: "С", sort-by: "Ss"), "Скороспелка")`
+
+or
+
+`#index(initial: (letter: "Ö", sort-by: "Oo"), "Ölrückstoßabdämpfung")`.
+
 
 #line(length: 100%, stroke: .1pt + gray)
 

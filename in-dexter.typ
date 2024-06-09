@@ -26,28 +26,34 @@
 // Default function to semantically mark main entries in the index
 #let index-main = index.with(fmt:strong)
 
-// Extracts (nested) content or text to content
 #let as-text(input) = {
-    let inputtype = type(input)
-    if inputtype == str {
-        input
-    } else if inputtype == content {
-        if input.has("children") {
-            input.children.map(child => as-text(child)).join("")
-        } else if input.has("text") {
-            input.text
-        } else if input.has("body") {
-            as-text(input.body)
+  let t = type(input)
+  if input == none or input == auto {
+      ""
+  } else if t == str {
+      input
+  } else if t == label {
+      repr(input)
+  } else if t == int {
+      str(input)
+  } else if t == content {
+    if input.has("text") {
+        input.text
+    } else if input.has("children") {
+        if input.children.len() == 0 {
+          ""
         } else {
-            input
+            input.children.map(child => as-text(child)).join("")
         }
-    } else if inputtype == arguments {
-        input.pos().join("")
+    } else if input.has("body") {
+        as-text(input.body)
     } else {
-        panic("Unexpected entry type " + inputtype + " of " + repr(input))
+        " "
     }
+  } else {
+    panic("Unexpected entry type " + t + " of " + repr(input))
+  }
 }
-
 
 // Internal function to set plain and nested entries
 #let make-entries(entries, page-link, reg-entry, use-bang-grouping) = {

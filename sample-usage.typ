@@ -18,7 +18,7 @@
     #linebreak() #v(1em)
     #text(size: 16pt)[An index package for Typst]
     #linebreak() #v(.5em)
-    #text(size: 12pt)[Version 0.4.2 (9.6.2024)]
+    #text(size: 12pt)[Version 0.4.3 (16.6.2024)]
     #linebreak() #v(.5em)
     #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
     #linebreak() #v(.5em)
@@ -57,7 +57,7 @@ breaking changes #index[Breaking Changes] in its next iteration.
 The package is also available via Typst's build-in Package Manager:
 
 ```typ
-    #import "@preview/in-dexter:0.4.2": *
+    #import "@preview/in-dexter:0.4.3": *
 ```
 
 Note, that the version number of the typst package has to be adapted to get the wanted
@@ -214,6 +214,31 @@ The first value of the tuple is interpreted as the `display`, the second as the 
 #indexMath(([d-$phi_x^2*sum(d)$], "DPX"))
 
 
+==== Suppressing the casing for formulas
+
+Sometimes, the entry-casing of the `make-index()` funtion should not apply to an entry.
+This is often the case for math formulas. The `index()` funtion therefore has a parameter
+`apply-casing`, that allows to suppress the application of the entry-casing function for
+this specific entry.
+
+```typ
+#index(display: $(n, k)"-representable"$, "nkrepresentable", apply-casing: false)
+```
+
+#index(display: $(n, k)"-representable"$, "nkrepresentable", apply-casing: false)
+
+
+Note: If multiple entries have the same key, but different apply-casing flags, the first one wins.
+
+```typ
+#index(display: $(x, p)"-double"$, "xprepresentable", apply-casing: false)
+#index(display: $(x, p)"-double"$, "xprepresentable", apply-casing: true)
+```
+
+#index(display: $(x, p)"-double"$, "xprepresentable", apply-casing: false)
+#index(display: $(x, p)"-double"$, "xprepresentable", apply-casing: true)
+
+
 ==== Symbols
 
 Symbols can be indexed to be sorted under `"Symbols"`, and be sorted at the top of the index like this
@@ -326,9 +351,10 @@ demonstrate#index-ff([Demonstrate]) (using a custom made `index-ff` function) th
 functionality #index[Functionality] and have a properly#index[Properly]
 filled#index3[filled] index at the end.
 
-Even for symbols like `(ρ)`.#index([$(rho)$], initial: (letter: "Symbols", sort-by: "#"))
-Indexing should work for for any Unicode string like Cyrillic (Скороспелка#index(initial:
-(letter: "С", sort-by: "Ss"), "Скороспелка")) or German
+Even for symbols like `(ρ)`.
+#index([$(rho)$], initial: (letter: "Symbols", sort-by: "#"), apply-casing: false)
+Indexing should work for for any Unicode string like Cyrillic
+(Скороспелка#index(initial: (letter: "С", sort-by: "Ss"), "Скороспелка")) or German
 (Ölrückstoßabdämpfung).#index(initial: (letter: "Ö", sort-by: "Oo"),
 "Ölrückstoßabdämpfung") - though we need to add initials:
 
@@ -421,7 +447,7 @@ Here we select explicitly secondary and tertiary indexes and format them all low
 
 == Math Index
 
-Here we select explicitly only the Math index.
+Here we explicitly select only the Math index.
 
 #columns(3)[
     #make-index(indexes: ("Math"),

@@ -9,10 +9,12 @@
 //    symbols under a common "Symbols" headline
 // @param index: Name of the index to add the entry to. Default is "Default".
 // @param display: If given, this will be the displayed content in the index page (instead of the key entry).
+// @param apply-casing: If set to auto (default) the parameter from make-index is used.
+//    Otherwise it overwrites the setting. Set to false for entries starting with a formula!
 // @param ..entry, variable argument to nest index entries (left to right). Only the last, rightmost
 // entry is the key for the entry. The others are used for grouping.
-#let index(fmt: it => it, initial: none, index: "Default", display: auto, ..entry) = locate(loc => [
-    #metadata((
+#let index(fmt: it => it, initial: none, index: "Default", display: auto, apply-casing: auto, ..entry) = locate(loc => {
+    [#metadata((
         fmt: fmt,
         initial: initial,
         index-name: index,
@@ -20,8 +22,9 @@
         page-counter: counter(page).display(),
         entry: entry,
         display: display,
-    ))<jkrb_index>
-])
+        apply-casing: apply-casing,
+    ))<jkrb_index>]
+})
 
 // Default function to semantically mark main entries in the index
 #let index-main = index.with(fmt:strong)
@@ -56,7 +59,7 @@
 }
 
 // Internal function to set plain and nested entries
-#let make-entries(entries, page-link, reg-entry, use-bang-grouping) = {
+#let make-entries(entries, page-link, reg-entry, use-bang-grouping, apply-casing) = {
     // Handling LaTeX nested entry syntax (only if it is the last entry)
 
     if use-bang-grouping and entries.len() == 1 {
@@ -88,13 +91,14 @@
 
     if rest.len() > 0 {
         let nested-entries = reg-entry.at(entry.key, default: (:))
-        let ref = make-entries(rest, page-link, nested-entries.at("nested", default: (:)), use-bang-grouping)
+        let ref = make-entries(rest, page-link, nested-entries.at("nested", default: (:)), use-bang-grouping, apply-casing)
         nested-entries.insert("nested", ref)
         reg-entry.insert(entry.key, nested-entries)
     } else {
         let key = if type(entry.key) == str { entry.key } else { as-text(entry.key) }
         if type(key) == content { panic("Entry must be string compatible. Consider specifying as display parameter.") }
-        let current-entry = reg-entry.at(key, default: (display: entry.display, "pages": ()))
+        let current-entry = reg-entry.at(key, default: (display: entry.display, pages: (),
+        apply-casing: apply-casing))
         let pages = current-entry.at("pages", default: ())
         if not pages.contains(page-link) {
             pages.push(page-link)
@@ -110,8 +114,8 @@
     let register = (:)
     let initials = (:)
     for indexed in query(<jkrb_index>, loc) {
-        let (fmt, initial, index-name, location, page-counter, entry, display) = indexed.value
-        if (indexes != auto) and (not  indexes.contains(index-name)) { continue }
+        let (fmt, initial, index-name, location, page-counter, entry, display, apply-casing) = indexed.value
+        if (indexes != auto) and (not indexes.contains(index-name)) { continue }
 
         // Handle tuple as (display, key)
         let entries = entry.pos().map(e => {
@@ -163,7 +167,8 @@
                             make-entries(entries,
                                          (page: location.page, fmt: fmt, page-counter: page-counter),
                                          reg-entry,
-                                         use-bang-grouping))
+                                         use-bang-grouping,
+                                         apply-casing))
         }
     }
     (register: register, initials: initials)
@@ -183,27 +188,53 @@
     }
 }
 
-#let apply-entry-casing(display, entry-casing) = {
-    if type(display) == str {
-        entry-casing(display)
-    } else {
-        let a = as-text(display)
-        if type(a) == str { entry-casing(a) } else { a }
+// #let apply-entry-casing(display, entry-casing) = {
+//     if type(display) == str {
+//         entry-casing(display)
+//     } else {
+//         let a = as-text(display)
+//         if type(a) == str { entry-casing(a) } else { a }
+//     }
+// }
+
+#let apply-entry-casing(display, entry-casing, apply-casing) = {
+    let applied = state("applied", false)
+    applied.update(false)
+    show text: it => context {
+        let t = it.text
+        let transformed = entry-casing(t)
+        if t == transformed or applied.get() == true {
+            it
+        } else {
+            if apply-casing == false {
+                it
+            } else {
+                let t2 = entry-casing(transformed)
+                if t2 != transformed {
+                    panic("entry-casing not idempotent:" + repr(t)
+                        + "~>" + repr(transformed)
+                        + "~>" + repr(t2))
+                }
+                applied.update(true)
+                transformed
+            }
+        }
     }
+    display
 }
 
 // Internal function to format a plain or nested entry
-#let render-entry(idx, entries, lvl, use-page-counter, sort-order, entry-casing) = {
-    let pages = entries.at("pages", default: ())
-    let display = entries.at("display", default: idx)
+#let render-entry(idx, entry, lvl, use-page-counter, sort-order, entry-casing) = {
+    let pages = entry.at("pages", default: ())
+    let display = entry.at("display", default: idx)
     let render-function = render-link.with(use-page-counter)
     let rendered-pages = [
-        #box(width: lvl * 1em)#apply-entry-casing(display, entry-casing)#box(width: 1fr)#pages.map(render-function).join(", ") \
+        #box(width: lvl * 1em)#apply-entry-casing(display, entry-casing, entry.at("apply-casing", default: auto))#box(width: 1fr)#pages.map(render-function).join(", ") \
     ]
-    let sub-entries = entries.at("nested", default: (:))
+    let sub-entries = entry.at("nested", default: (:))
     let rendered-entries = if sub-entries.keys().len() > 0 [
-        #for entry in sub-entries.keys().sorted(key: sort-order) [
-            #render-entry(apply-entry-casing(entry, entry-casing), sub-entries.at(entry), lvl + 1, use-page-counter, sort-order, entry-casing)
+        #for key in sub-entries.keys().sorted(key: sort-order) [
+            #render-entry(key, sub-entries.at(key), lvl + 1, use-page-counter, sort-order, entry-casing)
         ]
     ]
     [

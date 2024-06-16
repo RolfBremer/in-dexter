@@ -21,7 +21,8 @@ and fine-tuning.
     * [Brief Sample Document](#brief-sample-document)
     * [Full Sample Document](#full-sample-document)
 * [Changelog](#changelog)
-  * [v0.4.2](#v041)
+  * [v0.4.3](#v043)
+  * [v0.4.2](#v042)
   * [v0.4.1](#v041)
   * [v0.4.0](#v040)
   * [v0.3.2](#v032)
@@ -46,7 +47,7 @@ Add the following code to the head of the document file(s)
 that want to use the index:
 
 ```typ
-  #import "@preview/in-dexter:0.4.2": *
+  #import "@preview/in-dexter:0.4.3": *
 ```
 
 Alternatively it can be loaded from the file, if you have it copied into your project.
@@ -138,7 +139,7 @@ This is a very brief sample to demonstrate how in-dexter can be used. The next c
 contains a more fleshed out sample.
 
 ```typ
-#import "@preview/in-dexter:0.4.2": *
+#import "@preview/in-dexter:0.4.3": *
 
 
 = My Sample Document with `in-dexter`
@@ -158,7 +159,7 @@ This section contains the generated Index.
 ### Full Sample Document
 
 ```typ
-#import "@preview/in-dexter:0.4.2": *
+#import "@preview/in-dexter:0.4.3": *
 
 #let index-main(..args) = index(fmt: strong, ..args)
 
@@ -224,6 +225,13 @@ A more complex sample PDF is available there as well.
 </span>
 
 ## Changelog
+
+### v0.4.3
+
+* Suppress extra space character emitted by the `index()` function.
+* Fix a bug where math formulas are not displayed.
+* Introduce `apply-casing` parameter to `index()` to suppress entry-casing for individual
+  entries.
 
 ### v0.4.2
 

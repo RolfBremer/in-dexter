@@ -178,7 +178,13 @@
 
 // Internal function to format a page link
 #let render-link(use-page-counter, (page, fmt, page-counter, page-numbering)) = {
-    link((page: page, x: 0pt, y: 0pt), fmt[#if use-page-counter { numbering(page-numbering, page-counter) } else { page }])
+    if page-numbering == none { page-numbering = "1" }
+    let resPage = if use-page-counter {
+        numbering(page-numbering, page-counter)
+    } else {
+        page
+    }
+    link((page: page, x: 0pt, y: 0pt), fmt[#resPage])
 }
 
 

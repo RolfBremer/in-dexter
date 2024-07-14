@@ -4,6 +4,11 @@
 #set text(lang: "en", font: "Arial", size: 10pt)
 #set heading(numbering: "1.1")
 
+#set page(
+    numbering: "1",
+    footer: align(right)[#counter(page).display("1")]
+)
+
 // Defining handy names for separate indexes to use with in-dexter in
 // this document. this is easier as having to type the index parameter
 // on each entry.
@@ -11,20 +16,20 @@
 #let index3 = index.with(index:"Tertiary")
 #let indexMath = index.with(index:"Math")
 
-
 // Front Matter
 #align(center)[
     #text(size: 23pt)[in-dexter]
     #linebreak() #v(1em)
     #text(size: 16pt)[An index package for Typst]
     #linebreak() #v(.5em)
-    #text(size: 12pt)[Version 0.4.3 (16.6.2024)]
+    #text(size: 12pt)[Version 0.5.0 (14.7.2024)]
     #linebreak() #v(.5em)
     #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
     #linebreak() #v(.5em)
-    #text(size: 10pt)[Contributors: \@epsilonhalbe, \@jewelpit, \@sbatial, \@lukasjuhrich]
+    #text(size: 10pt)[Contributors: \@epsilonhalbe, \@jewelpit, \@sbatial, \@lukasjuhrich, \@ThePuzzlemaker]
     #v(4em)
 ]
+
 
 // Table of Content
 #outline(indent: true, title: [Content])
@@ -57,7 +62,7 @@ breaking changes #index[Breaking Changes] in its next iteration.
 The package is also available via Typst's build-in Package Manager:
 
 ```typ
-    #import "@preview/in-dexter:0.4.3": *
+    #import "@preview/in-dexter:0.5.0": *
 ```
 
 Note, that the version number of the typst package has to be adapted to get the wanted
@@ -369,10 +374,16 @@ or
 
 #pagebreak()
 
+#set page(
+    numbering: "i",
+    footer: align(right)[#counter(page).display("i")]
+)
 
 = Index pages
 
-In this chapter we emit several index pages for this document.
+In this chapter we emit several index pages for this document. We also switched page
+numbering to roman numbers#index[Roman Numbers], to demonstrate in-dexters ability to
+display them, if the option `use-page-counter` has been set to true.
 
 // Table of Content from here on
 #context(
@@ -387,6 +398,7 @@ indexes together.
 
 #columns(3)[
     #make-index(use-bang-grouping: true,
+                use-page-counter: true,
                 sort-order: upper)
 ]
 
@@ -432,7 +444,8 @@ Here we select explicitly secondary and tertiary indexes.
 
 == Combined Index - all lower case
 
-Here we select explicitly secondary and tertiary indexes and format them all lower case.
+Here we select explicitly secondary#index[Secondary Index] and tertiary#index[Tertiary
+Index] indexes and format them all lower case.
 
 #columns(3)[
     #make-index(indexes: ("Secondary", "Tertiary"),

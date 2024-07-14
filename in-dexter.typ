@@ -19,7 +19,8 @@
         initial: initial,
         index-name: index,
         location: loc.position(),
-        page-counter: counter(page).display(),
+        page-counter: counter(page).at(loc).at(0),
+        page-numbering: loc.page-numbering(),
         entry: entry,
         display: display,
         apply-casing: apply-casing,
@@ -114,7 +115,7 @@
     let register = (:)
     let initials = (:)
     for indexed in query(<jkrb_index>, loc) {
-        let (fmt, initial, index-name, location, page-counter, entry, display, apply-casing) = indexed.value
+        let (fmt, initial, index-name, location, page-counter, page-numbering, entry, display, apply-casing) = indexed.value
         if (indexes != auto) and (not indexes.contains(index-name)) { continue }
 
         // Handle tuple as (display, key)
@@ -165,7 +166,7 @@
             let reg-entry = register.at(initial-letter, default: (:))
             register.insert(initial-letter,
                             make-entries(entries,
-                                         (page: location.page, fmt: fmt, page-counter: page-counter),
+                                         (page: location.page, fmt: fmt, page-counter: page-counter, page-numbering: page-numbering),
                                          reg-entry,
                                          use-bang-grouping,
                                          apply-casing))
@@ -176,8 +177,14 @@
 
 
 // Internal function to format a page link
-#let render-link(use-page-counter, (page, fmt, page-counter)) = {
-    link((page: page, x: 0pt, y: 0pt), fmt[#if use-page-counter { page-counter } else { page }])
+#let render-link(use-page-counter, (page, fmt, page-counter, page-numbering)) = {
+    if page-numbering == none { page-numbering = "1" }
+    let resPage = if use-page-counter {
+        numbering(page-numbering, page-counter)
+    } else {
+        page
+    }
+    link((page: page, x: 0pt, y: 0pt), fmt[#resPage])
 }
 
 

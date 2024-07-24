@@ -5,29 +5,31 @@
 #set heading(numbering: "1.1")
 
 #set page(
-    numbering: "1",
-    footer: align(right)[#context {counter(page).display("1")}]
+  numbering: "1",
+  footer: align(right)[#context {
+      counter(page).display("1")
+    }],
 )
 
 // Defining handy names for separate indexes to use with in-dexter in
 // this document. this is easier as having to type the index parameter
 // on each entry.
-#let index2 = index.with(index:"Secondary")
-#let index3 = index.with(index:"Tertiary")
-#let indexMath = index.with(index:"Math")
+#let index2 = index.with(index: "Secondary")
+#let index3 = index.with(index: "Tertiary")
+#let indexMath = index.with(index: "Math")
 
 // Front Matter
 #align(center)[
-    #text(size: 23pt)[in-dexter]
-    #linebreak() #v(1em)
-    #text(size: 16pt)[An index package for Typst]
-    #linebreak() #v(.5em)
-    #text(size: 12pt)[Version 0.5.1 (24.7.2024)]
-    #linebreak() #v(.5em)
-    #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
-    #linebreak() #v(.5em)
-    #text(size: 10pt)[Contributors: \@epsilonhalbe, \@jewelpit, \@sbatial, \@lukasjuhrich, \@ThePuzzlemaker]
-    #v(4em)
+  #text(size: 23pt)[in-dexter]
+  #linebreak() #v(1em)
+  #text(size: 16pt)[An index package for Typst]
+  #linebreak() #v(.5em)
+  #text(size: 12pt)[Version 0.5.1 (24.7.2024)]
+  #linebreak() #v(.5em)
+  #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
+  #linebreak() #v(.5em)
+  #text(size: 10pt)[Contributors: \@epsilonhalbe, \@jewelpit, \@sbatial, \@lukasjuhrich, \@ThePuzzlemaker]
+  #v(4em)
 ]
 
 
@@ -315,7 +317,7 @@ environment#index[Environment], like this:
 ```
 
 The `make-index()` function accepts an optional array of indexes to include into the index
-page. The default value, `auto`, takes all entries from all indexes.  The following sample
+page. The default value, `auto`, takes all entries from all indexes. The following sample
 only uses the entries of the secondary and tertiary index. See sample output in
 @combinedIndex.
 
@@ -375,8 +377,10 @@ or
 #pagebreak()
 
 #set page(
-    numbering: "i",
-    footer: align(right)[#context{counter(page).display("i")}]
+  numbering: "i",
+  footer: align(right)[#context {
+      counter(page).display("i")
+    }],
 )
 
 = Index pages
@@ -386,9 +390,7 @@ numbering to roman numbers#index[Roman Numbers], to demonstrate in-dexters abili
 display them, if the option `use-page-counter` has been set to true.
 
 // Table of Content from here on
-#context(
-    outline(title: none, target: selector(heading).after(here()))
-)
+#context (outline(title: none, target: selector(heading).after(here())))
 
 
 == The Default Index page
@@ -397,9 +399,11 @@ Here we generate the Index page in three columns. The default behavior (auto) is
 indexes together.
 
 #columns(3)[
-    #make-index(use-bang-grouping: true,
-                use-page-counter: true,
-                sort-order: upper)
+  #make-index(
+    use-bang-grouping: true,
+    use-page-counter: true,
+    sort-order: upper,
+  )
 ]
 
 #pagebreak()
@@ -410,7 +414,7 @@ indexes together.
 Here we select explicitly only the secondary index.
 
 #columns(3)[
-    #make-index(indexes: "Secondary", use-bang-grouping: true, sort-order: upper)
+  #make-index(indexes: "Secondary", use-bang-grouping: true, sort-order: upper)
 ]
 
 #line(length: 70%)
@@ -421,9 +425,11 @@ Here we select explicitly only the secondary index.
 Here we select explicitly only the tertiary index.
 
 #columns(3)[
-    #make-index(indexes: "Tertiary",
-                use-bang-grouping: true,
-                sort-order: upper)
+  #make-index(
+    indexes: "Tertiary",
+    use-bang-grouping: true,
+    sort-order: upper,
+  )
 ]
 
 #line(length: 70%)
@@ -434,9 +440,11 @@ Here we select explicitly only the tertiary index.
 Here we select explicitly secondary and tertiary indexes.
 
 #columns(3)[
-    #make-index(indexes: ("Secondary", "Tertiary"),
-                use-bang-grouping: true,
-                sort-order: upper)
+  #make-index(
+    indexes: ("Secondary", "Tertiary"),
+    use-bang-grouping: true,
+    sort-order: upper,
+  )
 ]
 
 #line(length: 70%)
@@ -448,10 +456,12 @@ Here we select explicitly secondary#index[Secondary Index] and tertiary#index[Te
 Index] indexes and format them all lower case.
 
 #columns(3)[
-    #make-index(indexes: ("Secondary", "Tertiary"),
-                entry-casing: lower,
-                use-bang-grouping: true,
-                sort-order: upper)
+  #make-index(
+    indexes: ("Secondary", "Tertiary"),
+    entry-casing: lower,
+    use-bang-grouping: true,
+    sort-order: upper,
+  )
 ]
 
 #line(length: 70%)
@@ -463,7 +473,9 @@ Index] indexes and format them all lower case.
 Here we explicitly select only the Math index.
 
 #columns(3)[
-    #make-index(indexes: ("Math"),
-                sort-order: upper,
-                use-bang-grouping: true)
+  #make-index(
+    indexes: ("Math"),
+    sort-order: upper,
+    use-bang-grouping: true,
+  )
 ]

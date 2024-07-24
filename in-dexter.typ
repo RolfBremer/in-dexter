@@ -13,7 +13,8 @@
 //    Otherwise it overwrites the setting. Set to false for entries starting with a formula!
 // @param ..entry, variable argument to nest index entries (left to right). Only the last, rightmost
 // entry is the key for the entry. The others are used for grouping.
-#let index(fmt: it => it, initial: none, index: "Default", display: auto, apply-casing: auto, ..entry) = locate(loc => {
+#let index(fmt: it => it, initial: none, index: "Default", display: auto, apply-casing: auto, ..entry) = context{
+    let loc = here();
     [#metadata((
         fmt: fmt,
         initial: initial,
@@ -25,7 +26,7 @@
         display: display,
         apply-casing: apply-casing,
     ))<jkrb_index>]
-})
+}
 
 // Default function to semantically mark main entries in the index
 #let index-main = index.with(fmt:strong)
@@ -111,10 +112,10 @@
 }
 
 // Internal function to collect plain and nested entries into the index
-#let references(loc, indexes, use-bang-grouping, sort-order) = {
+#let references(indexes, use-bang-grouping, sort-order) = {
     let register = (:)
     let initials = (:)
-    for indexed in query(<jkrb_index>, loc) {
+    for indexed in query(<jkrb_index>) {
         let (fmt, initial, index-name, location, page-counter, page-numbering, entry, display, apply-casing) = indexed.value
         if (indexes != auto) and (not indexes.contains(index-name)) { continue }
 
@@ -266,9 +267,9 @@
                 use-bang-grouping: false,
                 sort-order: k => upper(k),
                 entry-casing: k => first-letter-up(k),
-                indexes: auto) = locate(loc => {
+                indexes: auto) = context {
 
-    let (register, initials) = references(loc, indexes, use-bang-grouping, sort-order)
+    let (register, initials) = references(indexes, use-bang-grouping, sort-order)
 
     if title != none {
         heading(
@@ -287,4 +288,4 @@
             render-entry(idx, entry.at(idx), 0, use-page-counter, sort-order, entry-casing)
         }
     }
-})
+}

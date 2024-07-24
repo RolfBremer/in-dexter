@@ -6,7 +6,7 @@
 
 #set page(
     numbering: "1",
-    footer: align(right)[#counter(page).display("1")]
+    footer: align(right)[#context {counter(page).display("1")}]
 )
 
 // Defining handy names for separate indexes to use with in-dexter in
@@ -22,7 +22,7 @@
     #linebreak() #v(1em)
     #text(size: 16pt)[An index package for Typst]
     #linebreak() #v(.5em)
-    #text(size: 12pt)[Version 0.5.0 (14.7.2024)]
+    #text(size: 12pt)[Version 0.5.1 (24.7.2024)]
     #linebreak() #v(.5em)
     #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
     #linebreak() #v(.5em)
@@ -62,7 +62,7 @@ breaking changes #index[Breaking Changes] in its next iteration.
 The package is also available via Typst's build-in Package Manager:
 
 ```typ
-    #import "@preview/in-dexter:0.5.0": *
+    #import "@preview/in-dexter:0.5.1": *
 ```
 
 Note, that the version number of the typst package has to be adapted to get the wanted
@@ -376,7 +376,7 @@ or
 
 #set page(
     numbering: "i",
-    footer: align(right)[#counter(page).display("i")]
+    footer: align(right)[#context{counter(page).display("i")}]
 )
 
 = Index pages

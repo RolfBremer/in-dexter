@@ -149,6 +149,9 @@
 
     // Handle tuple as (display, key)
     let entries = entry.pos().map(e => {
+      if type(e) == content {
+        e = as-text(e)
+      }
       let disp = if display == auto {
         e
       } else {

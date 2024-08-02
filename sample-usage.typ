@@ -24,7 +24,7 @@
   #linebreak() #v(1em)
   #text(size: 16pt)[An index package for Typst]
   #linebreak() #v(.5em)
-  #text(size: 12pt)[Version 0.5.1 (24.7.2024)]
+  #text(size: 12pt)[Version 0.5.2 (2.8.2024)]
   #linebreak() #v(.5em)
   #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
   #linebreak() #v(.5em)
@@ -64,11 +64,12 @@ breaking changes #index[Breaking Changes] in its next iteration.
 The package is also available via Typst's build-in Package Manager:
 
 ```typ
-    #import "@preview/in-dexter:0.5.1": *
+    #import "@preview/in-dexter:0.5.2": *
 ```
 
 Note, that the version number of the typst package has to be adapted to get the wanted
-version.
+version. It may take some time for a new version to appear in the typst universe after it
+is available on GitHub.
 
 
 == Marking of Entries
@@ -397,6 +398,10 @@ display them, if the option `use-page-counter` has been set to true.
 
 Here we generate the Index page in three columns. The default behavior (auto) is to use all
 indexes together.
+
+#index-main[Metadaten!Primäre]
+#index-main(display: "Joy")[Metadaten!Sekundäre!Fun]
+#index-main("Metadaten!Tertiäre")
 
 #columns(3)[
   #make-index(

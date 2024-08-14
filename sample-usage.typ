@@ -403,6 +403,10 @@ indexes together.
 #index-main(display: "Joy")[Metadaten!Sekundäre!Fun]
 #index-main("Metadaten!Tertiäre")
 
+// A sample with a raw display text
+#index(display: `Aberation`, "Aberation")
+
+
 #columns(3)[
   #make-index(
     use-bang-grouping: true,

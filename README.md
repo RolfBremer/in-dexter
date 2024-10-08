@@ -21,6 +21,7 @@ and fine-tuning.
     * [Brief Sample Document](#brief-sample-document)
     * [Full Sample Document](#full-sample-document)
 * [Changelog](#changelog)
+  * [v0.6.0](#v060)
   * [v0.5.3](#v053)
   * [v0.5.2](#v052)
   * [v0.5.1](#v051)
@@ -51,7 +52,7 @@ Add the following code to the head of the document file(s)
 that want to use the index:
 
 ```typ
-  #import "@preview/in-dexter:0.5.3": *
+  #import "@preview/in-dexter:0.6.0": *
 ```
 
 Alternatively it can be loaded from the file, if you have it copied into your project.
@@ -143,7 +144,7 @@ This is a very brief sample to demonstrate how in-dexter can be used. The next c
 contains a more fleshed out sample.
 
 ```typ
-#import "@preview/in-dexter:0.5.3": *
+#import "@preview/in-dexter:0.6.0": *
 
 
 = My Sample Document with `in-dexter`
@@ -163,7 +164,7 @@ This section contains the generated Index.
 ### Full Sample Document
 
 ```typ
-#import "@preview/in-dexter:0.5.3": *
+#import "@preview/in-dexter:0.6.0": *
 
 #let index-main(..args) = index(fmt: strong, ..args)
 
@@ -230,15 +231,20 @@ A more complex sample PDF is available there as well.
 
 ## Changelog
 
+### v0.6.0
+
+* Support for Ranges and Continuations (range references, f. ff.).
+* Fix: Consolidate multiple references to the same page.
+
 ### v0.5.3
 
-* fix error in typst.toml file.
+* Fix error in typst.toml file.
 * Add a sample for raw display.
 
 ### v0.5.2
 
 * Fix a bug with bang notation.
-* Add compiler to toml file.
+* Add compiler version to toml file.
 
 ### v0.5.1
 

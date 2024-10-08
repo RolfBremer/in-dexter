@@ -2,8 +2,15 @@
 // Use of this code is governed by the License in the LICENSE.txt file.
 // For a 'how to use this package', see the accompanying .md, .pdf + .typ documents.
 
+#let indexTypes = (
+  Start: "Start",
+  End: "End",
+  Cardinal: "Cardinal",
+)
+
 // Adds a new entry to the index
 // @param fmt: function: content -> content
+// @param indexType: indexTypes.Cardinal, indexTypes.Start, indexTypes.End.
 // @param initial: "letter" to sort entries under - otherwise first letter of entry is used,
 //    useful for indexing umlauts or accented letters with their unaccented versions or
 //    symbols under a common "Symbols" headline
@@ -13,15 +20,25 @@
 //    Otherwise it overwrites the setting. Set to false for entries starting with a formula!
 // @param ..entry, variable argument to nest index entries (left to right). Only the last, rightmost
 // entry is the key for the entry. The others are used for grouping.
-#let index(fmt: it => it, initial: none, index: "Default", display: auto, apply-casing: auto, ..entry) = (
+#let index(
+  fmt: it => it,
+  indexType: indexTypes.Cardinal,
+  initial: none,
+  index: "Default",
+  display: auto,
+  apply-casing: auto,
+  ..entry,
+) = (
   context {
     let loc = here()
     [#metadata((
         fmt: fmt,
+        indexType: indexType,
         initial: initial,
         index-name: index,
         location: loc.position(),
         page-counter: counter(page).at(loc).at(0),
+        page-counter-end: counter(page).at(loc).at(0),
         page-numbering: loc.page-numbering(),
         entry: entry,
         display: display,
@@ -63,7 +80,13 @@
 }
 
 // Internal function to set plain and nested entries
-#let make-entries(entries, page-link, reg-entry, use-bang-grouping, apply-casing) = {
+#let make-entries(
+  entries,
+  page-link,
+  reg-entry,
+  use-bang-grouping,
+  apply-casing,
+) = {
   // Handling LaTeX nested entry syntax (only if it is the last entry)
 
   if use-bang-grouping and entries.len() == 1 {
@@ -115,13 +138,29 @@
     }
     let current-entry = reg-entry.at(
       key,
-      default: (display: entry.display, pages: (), apply-casing: apply-casing),
+      default: (
+        display: entry.display,
+        pages: (),
+        apply-casing: apply-casing,
+      ),
     )
     let pages = current-entry.at("pages", default: ())
-    if not pages.contains(page-link) {
-      pages.push(page-link)
+    let pageRanges = pages.map(p => {
+      if p.indexType == indexTypes.Start and page-link.indexType == indexTypes.End {
+        p.indexType = "Range"
+        p.rangeEnd = page-link.page
+        p.page-counter-end = page-link.page-counter
+      }
+      return p
+    })
+    let searchFunc = p => {
+      p.indexType == "Range" and p.rangeEnd == page-link.page or p.indexType == indexTypes.Cardinal and p.page == page-link.page and p.fmt == page-link.fmt
     }
-    current-entry.insert("pages", pages)
+    let foundRange = pageRanges.find(searchFunc)
+    if foundRange == none {
+      pageRanges.push(page-link)
+    }
+    current-entry.insert("pages", pageRanges)
     reg-entry.insert(key, current-entry)
   }
   reg-entry
@@ -131,18 +170,22 @@
 #let references(indexes, use-bang-grouping, sort-order) = {
   let register = (:)
   let initials = (:)
+
   for indexed in query(<jkrb_index>) {
     let (
       fmt,
+      indexType,
       initial,
       index-name,
       location,
       page-counter,
+      page-counter-end,
       page-numbering,
       entry,
       display,
       apply-casing,
     ) = indexed.value
+
     if (indexes != auto) and (not indexes.contains(index-name)) {
       continue
     }
@@ -206,7 +249,15 @@
         initial-letter,
         make-entries(
           entries,
-          (page: location.page, fmt: fmt, page-counter: page-counter, page-numbering: page-numbering),
+          (
+            page: location.page,
+            rangeEnd: location.page,
+            fmt: fmt,
+            indexType: indexType,
+            page-counter: page-counter,
+            page-counter-end: page-counter-end,
+            page-numbering: page-numbering,
+          ),
           reg-entry,
           use-bang-grouping,
           apply-casing,
@@ -219,16 +270,43 @@
 
 
 // Internal function to format a page link
-#let render-link(use-page-counter, (page, fmt, page-counter, page-numbering)) = {
+#let render-link(
+  use-page-counter,
+  spc,
+  mpc,
+  (page, rangeEnd, indexType, fmt, page-counter, page-counter-end, page-numbering),
+) = {
   if page-numbering == none {
     page-numbering = "1"
   }
   let resPage = if use-page-counter {
     numbering(page-numbering, page-counter)
   } else {
-    page
+    str(page)
   }
-  link((page: page, x: 0pt, y: 0pt), fmt[#resPage])
+  let resEndPage = if use-page-counter {
+    numbering(page-numbering, page-counter-end)
+  } else {
+    str(rangeEnd)
+  }
+  let t = if indexType == "Range" {
+    if rangeEnd - page == 1 {
+      if spc != none {
+        resPage + spc
+      } else {
+        resPage + "-" + resEndPage
+      }
+    } else if rangeEnd == page {
+      resPage
+    } else {
+      resPage + "-" + resEndPage
+    }
+  } else if indexType == indexTypes.Start {
+    resPage + mpc
+  } else {
+    resPage
+  }
+  link((page: page, x: 0pt, y: 0pt), fmt[#t])
 }
 
 
@@ -238,15 +316,6 @@
     upper(entry.first()) + entry.clusters().slice(1).join()
   }
 }
-
-// #let apply-entry-casing(display, entry-casing) = {
-//     if type(display) == str {
-//         entry-casing(display)
-//     } else {
-//         let a = as-text(display)
-//         if type(a) == str { entry-casing(a) } else { a }
-//     }
-// }
 
 #let apply-entry-casing(display, entry-casing, apply-casing) = {
   let applied = state("applied", false)
@@ -275,21 +344,22 @@
 }
 
 // Internal function to format a plain or nested entry
-#let render-entry(idx, entry, lvl, use-page-counter, sort-order, entry-casing) = {
+#let render-entry(idx, entry, lvl, use-page-counter, sort-order, entry-casing, spc, mpc) = {
   let pages = entry.at("pages", default: ())
   let display = entry.at("display", default: idx)
-  let render-function = render-link.with(use-page-counter)
+  let render-function = render-link.with(use-page-counter, spc, mpc)
   let rendered-pages = [
+    #let p = pages.map(render-function)
     #box(width: lvl * 1em)#apply-entry-casing(
       display,
       entry-casing,
       entry.at("apply-casing", default: auto),
-    )#box(width: 1fr)#pages.map(render-function).join(", ") \
+    )#box(width: 1fr)#p.join(", ") \
   ]
   let sub-entries = entry.at("nested", default: (:))
   let rendered-entries = if sub-entries.keys().len() > 0 [
     #for key in sub-entries.keys().sorted(key: sort-order) [
-      #render-entry(key, sub-entries.at(key), lvl + 1, use-page-counter, sort-order, entry-casing)
+      #render-entry(key, sub-entries.at(key), lvl + 1, use-page-counter, sort-order, entry-casing, spc, mpc)
     ]
   ]
   [
@@ -307,6 +377,9 @@
 // @param sort-order (default: upper) a function to control how the entry is sorted.
 // @param entry-casing (default: first-letter-up) a function to control how the
 //        entry key is displayed (when no display parameter is provided).
+// @param spc (default: "f.") Symbol(s) to mark a Single-Page-Continuation.
+//        If set to none, a numeric range is used instead, like "42-43".
+// @param mpc (default: "ff.") Symbol(s) to mark a Multi-Page-Continuation.
 // @param indexes (default: auto) optional name(s) of the index(es) to use. Auto uses all indexes.
 #let make-index(
   title: none,
@@ -315,6 +388,8 @@
   use-bang-grouping: false,
   sort-order: k => upper(k),
   entry-casing: k => first-letter-up(k),
+  spc: "f.",
+  mpc: "ff.",
   indexes: auto,
 ) = (
   context {
@@ -329,13 +404,20 @@
       )
     }
 
+    let lastPage = counter(page).get().last()
+    let effective-mpc = if mpc == none {
+      "-" + str(lastPage)
+    } else {
+      mpc
+    }
+
     for initial in initials.keys().sorted() {
       let letter = initials.at(initial)
       heading(level: 2, numbering: none, outlined: false, letter)
       let entry = register.at(letter)
       // sort entries
       for idx in entry.keys().sorted(key: sort-order) {
-        render-entry(idx, entry.at(idx), 0, use-page-counter, sort-order, entry-casing)
+        render-entry(idx, entry.at(idx), 0, use-page-counter, sort-order, entry-casing, spc, effective-mpc)
       }
     }
   }

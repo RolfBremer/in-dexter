@@ -24,7 +24,7 @@
   #linebreak() #v(1em)
   #text(size: 16pt)[An index package for Typst]
   #linebreak() #v(.5em)
-  #text(size: 12pt)[Version 0.5.3 (14.8.2024)]
+  #text(size: 12pt)[Version 0.6.0 (6.10.2024)]
   #linebreak() #v(.5em)
   #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
   #linebreak() #v(.5em)
@@ -64,7 +64,7 @@ breaking changes #index[Breaking Changes] in its next iteration.
 The package is also available via Typst's build-in Package Manager:
 
 ```typ
-    #import "@preview/in-dexter:0.5.3": *
+    #import "@preview/in-dexter:0.6.0": *
 ```
 
 Note, that the version number of the typst package has to be adapted to get the wanted
@@ -73,6 +73,12 @@ is available on GitHub.
 
 
 == Marking of Entries
+
+// This marks the start of the range for the Entry-Key "Entries"
+#index(indexType: indexTypes.Start)[Entries]
+
+// This marks the start of the range for the Entry-Key "Entriy-Marker"
+#index(indexType: indexTypes.Start)[Entry-Marker]
 
 We have marked several words to be included in an index page. The markup for the entry
 stays invisible#index[Invisible]. Its location in the text gets recorded, and later it is
@@ -94,9 +100,10 @@ or
     #index("The Entry Phrase")
 ```
 
-Entries marked this way are going to the "Default" Index. If only one index is needed, this
-is the only way needed to mark entries. In-dexter can support multiple Indexes. To
-specify the target index for a marking, the index must be addressed.
+Entries marked this way are going to the "Default" Index. If only one index is needed,
+this is the only way needed to mark entries. In-dexter can support multiple Indexes
+#index[Multiple Indexes]. To specify the target index for a marking, the index must be
+addressed.
 
 ```typ
     #index(index: "Secondary")[The Entry Phrase]
@@ -113,9 +120,11 @@ It may be useful to define a function for the alternate index, to avoid the expl
     #index2[Another Entry Phrase]
 ```
 
+
 === Nested entries
 
-Entries can be nested. The `index` function takes multiple arguments - one for each nesting level.
+Entries can be nested. The `index` function takes multiple arguments - one for each
+nesting level.
 
 ```typ
     #index("Sample", "medical", "blood")
@@ -150,8 +159,9 @@ They can even be combined:
 
 #index("CombiGroup", "Sample!musical!Chess!")
 
-Note that the last bang is not handled as a separator, but is part of the entry.
-To use the bang grouping syntax, the `make-index()` function must be called with the parameter `use-bang-grouping: true`:
+Note that the last bang is not handled as a separator, but is part of the entry. To use
+the bang grouping syntax, the `make-index()` function must be called with the parameter
+`use-bang-grouping: true`:
 
 ```typ
     #make-index(use-bang-grouping: true)
@@ -173,6 +183,9 @@ index page. It can contain rich content, like math expressions:
 #indexMath(display: [$cal(T)_n$-set], "Aa-set")
 #indexMath(display: [$cal(T)^n$-set], "Aa-set4")
 
+Note that display may be ignored, if entries with the same entry key are defined
+beforehand. The first occurance of an entry defines the display of all other entries with
+that entry key.
 
 === Advanced entries
 
@@ -216,16 +229,20 @@ The index-function to mark entries also accepts a tuple value:
 
 #indexMath(([d-$rho_x$], "RTX"))
 
-The first value of the tuple is interpreted as the `display`, the second as the `key` parameter.
+The first value of the tuple is interpreted as the `display`, the second as the `key`
+parameter.
+
 
 // More samples and tests
 #indexMath(([d-$phi_x^2*sum(d)$], "DPX"))
 
+#index(indexType: indexTypes.End)[Entry-Marker]
+
 
 ==== Suppressing the casing for formulas
 
-Sometimes, the entry-casing of the `make-index()` funtion should not apply to an entry.
-This is often the case for math formulas. The `index()` funtion therefore has a parameter
+Sometimes, the entry-casing of the `make-index()` function should not apply to an entry.
+This is often the case for math formulas. The `index()` function therefore has a parameter
 `apply-casing`, that allows to suppress the application of the entry-casing function for
 this specific entry.
 
@@ -236,7 +253,8 @@ this specific entry.
 #index(display: $(n, k)"-representable"$, "nkrepresentable", apply-casing: false)
 
 
-Note: If multiple entries have the same key, but different apply-casing flags, the first one wins.
+Note: If multiple entries have the same key, but different apply-casing flags, the first
+one wins.
 
 ```typ
 #index(display: $(x, p)"-double"$, "xprepresentable", apply-casing: false)
@@ -249,7 +267,8 @@ Note: If multiple entries have the same key, but different apply-casing flags, t
 
 ==== Symbols
 
-Symbols can be indexed to be sorted under `"Symbols"`, and be sorted at the top of the index like this
+Symbols can be indexed to be sorted under `"Symbols"`, and be sorted at the top of the
+index like this
 
 ```typ
     #indexMath(initial: (letter: "Symbols", sort-by: "#"), [$(sigma)$])
@@ -303,6 +322,77 @@ Here we define another semantical index marker, which adds an "ff." to the page 
 #let index-ff = index.with(fmt: it => [#it _ff._])
 
 
+==== Referencing Ranges and Continuations
+
+Up to this point, we used Cardinal Markers#index[Cardinal Markers] to mark the index
+entries. They are referred to with their single page number from the index page. But
+`in-dexter` also supports more advanced references to marked entries, like the following:
+
+- Ranges of Pages:
+  - 42-46
+  - 42-46, 52-59
+
+- Single Page Continuation (SPC):
+  - 77f.
+  - 77+
+
+- Multi-Page Continuation (MPC):
+  - 82ff.
+  - 77-
+  - 77++
+
+The Continuation Symbols ("f.", "ff.") symbols can be customized via parameters `spc` and
+`mpc` to `make-index()`.
+
+This Sample uses "+" for _Single Page Continuation_ and "++" for _Multi Page Continuations_.
+```typ
+  #make-index(
+    use-bang-grouping: true,
+    use-page-counter: true,
+    sort-order: upper,
+    spc: "+",
+    mpc: "++",
+  )
+```
+
+
+If `spc` is set to `none`, an explicit numeric range is used, like "42-43".
+If `mpc` is set to `none`, an explicit numeric range is used, like "42-49".
+
+Note that "f." and "ff." are the default symbols for `scp` and `mcp`.
+
+
+===== Range of Pages
+
+To mark a Range of pages for an index entry, one can use the following marker:
+
+```typ
+#index(indexType: indexTypes.Start)[Entry]
+
+// other content here
+
+#index(indexType: indexTypes.End)[Entry]
+```
+
+Of course, you can shorten this somewhat explicit marker with your own marker, like this:
+
+#let index-start = index.with(indexType: indexTypes.Start)
+#let index-end = index.with(indexType: indexTypes.End)
+
+
+Behavior:
+
+- If the markers are on the same resulting page, they are automatically combined to a
+  Cardinal Marker#index[Cardinal Marker] in the generated index page.
+
+- If the End-Marker is on the next page following the Start-Marker, the Marker is handled
+  as a Continuation Marker ("f."). If it uses the Continuation Symbol or the page numbers
+  can be configured in a Parameter of `make-index()`.
+
+- If there is a Start-Marker, but no End-Marker, the Marker is handled as a Continuation
+  Marker ("ff.").
+
+
 == The Index Page
 
 #index[Index Page]
@@ -328,11 +418,13 @@ only uses the entries of the secondary and tertiary index. See sample output in
     ]
 ```
 
+
 === Skipping physical pages
 
-If page number 1 is not the first physical page#index-main[physical page] of the document, the
-parameter ` use-page-counter` of the `make-index()` function can be set to `true`. Default
-is `false`. In-dexter uses the page counter instead of the physical page number then.
+If page number 1 is not the first physical page#index-main[physical page] of the document,
+the parameter ` use-page-counter` of the `make-index()` function can be set to `true`.
+Default is `false`. In-dexter uses the page counter instead of the physical page number
+then.
 
 
 = Why Having an Index in Times of Search Functionality?
@@ -384,6 +476,10 @@ or
     }],
 )
 
+// This marks the end of the range for the Entry-Key "Entries"
+#index(indexType: indexTypes.End)[Entries]
+
+
 = Index pages
 
 In this chapter we emit several index pages for this document. We also switched page
@@ -394,17 +490,17 @@ display them, if the option `use-page-counter` has been set to true.
 #context (outline(title: none, target: selector(heading).after(here())))
 
 
-== The Default Index page
+== The Default Index page<defaultIndex>
 
-Here we generate the Index page in three columns. The default behavior (auto) is to use all
-indexes together.
+Here we generate the Index page in three columns. The default behavior (auto) is to use
+all indexes together.
 
 #index-main[Metadaten!Primäre]
 #index-main(display: "Joy")[Metadaten!Sekundäre!Fun]
 #index-main("Metadaten!Tertiäre")
 
 // A sample with a raw display text
-#index(display: `Aberation`, "Aberation")
+#index(display: `Aberration`, "Aberration")
 
 
 #columns(3)[
@@ -426,7 +522,7 @@ Here we select explicitly only the secondary index.
   #make-index(indexes: "Secondary", use-bang-grouping: true, sort-order: upper)
 ]
 
-#line(length: 70%)
+#line(length: 100%)
 
 
 == Tertiary Index
@@ -441,7 +537,7 @@ Here we select explicitly only the tertiary index.
   )
 ]
 
-#line(length: 70%)
+#line(length: 100%)
 
 
 == Combined Index<combinedIndex>
@@ -456,7 +552,7 @@ Here we select explicitly secondary and tertiary indexes.
   )
 ]
 
-#line(length: 70%)
+#line(length: 100%)
 
 
 == Combined Index - all lower case
@@ -473,7 +569,7 @@ Index] indexes and format them all lower case.
   )
 ]
 
-#line(length: 70%)
+#line(length: 100%)
 #pagebreak()
 
 

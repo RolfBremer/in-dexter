@@ -272,6 +272,7 @@
 // Internal function to format a page link
 #let render-link(
   use-page-counter,
+  range-delimiter,
   spc,
   mpc,
   (page, rangeEnd, indexType, fmt, page-counter, page-counter-end, page-numbering),
@@ -294,12 +295,12 @@
       if spc != none {
         resPage + spc
       } else {
-        resPage + "-" + resEndPage
+        resPage + range-delimiter + resEndPage
       }
     } else if rangeEnd == page {
       resPage
     } else {
-      resPage + "-" + resEndPage
+      resPage + range-delimiter + resEndPage
     }
   } else if indexType == indexTypes.Start {
     resPage + mpc
@@ -344,10 +345,10 @@
 }
 
 // Internal function to format a plain or nested entry
-#let render-entry(idx, entry, lvl, use-page-counter, sort-order, entry-casing, spc, mpc) = {
+#let render-entry(idx, entry, lvl, use-page-counter, sort-order, entry-casing, range-delimiter, spc, mpc) = {
   let pages = entry.at("pages", default: ())
   let display = entry.at("display", default: idx)
-  let render-function = render-link.with(use-page-counter, spc, mpc)
+  let render-function = render-link.with(use-page-counter, range-delimiter, spc, mpc)
   let rendered-pages = [
     #let p = pages.map(render-function)
     #box(width: lvl * 1em)#apply-entry-casing(
@@ -359,7 +360,7 @@
   let sub-entries = entry.at("nested", default: (:))
   let rendered-entries = if sub-entries.keys().len() > 0 [
     #for key in sub-entries.keys().sorted(key: sort-order) [
-      #render-entry(key, sub-entries.at(key), lvl + 1, use-page-counter, sort-order, entry-casing, spc, mpc)
+      #render-entry(key, sub-entries.at(key), lvl + 1, use-page-counter, sort-order, entry-casing, range-delimiter, spc, mpc)
     ]
   ]
   [
@@ -377,6 +378,8 @@
 // @param sort-order (default: upper) a function to control how the entry is sorted.
 // @param entry-casing (default: first-letter-up) a function to control how the
 //        entry key is displayed (when no display parameter is provided).
+// @param range-delimiter (default: [--]) the delimiter to use in ranges, like the
+//        em-dash in "1--42".
 // @param spc (default: "f.") Symbol(s) to mark a Single-Page-Continuation.
 //        If set to none, a numeric range is used instead, like "42-43".
 // @param mpc (default: "ff.") Symbol(s) to mark a Multi-Page-Continuation.
@@ -390,6 +393,7 @@
   entry-casing: k => first-letter-up(k),
   spc: "f.",
   mpc: "ff.",
+  range-delimiter: [--],
   indexes: auto,
 ) = (
   context {
@@ -406,7 +410,7 @@
 
     let lastPage = counter(page).get().last()
     let effective-mpc = if mpc == none {
-      "-" + str(lastPage)
+      range-delimiter + str(lastPage)
     } else {
       mpc
     }
@@ -417,7 +421,7 @@
       let entry = register.at(letter)
       // sort entries
       for idx in entry.keys().sorted(key: sort-order) {
-        render-entry(idx, entry.at(idx), 0, use-page-counter, sort-order, entry-casing, spc, effective-mpc)
+        render-entry(idx, entry.at(idx), 0, use-page-counter, sort-order, entry-casing, range-delimiter, spc, effective-mpc)
       }
     }
   }

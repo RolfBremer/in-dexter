@@ -24,11 +24,11 @@
   #linebreak() #v(1em)
   #text(size: 16pt)[An index package for Typst]
   #linebreak() #v(.5em)
-  #text(size: 12pt)[Version 0.6.0 (6.10.2024)]
+  #text(size: 12pt)[Version 0.6.1 (9.10.2024)]
   #linebreak() #v(.5em)
   #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
   #linebreak() #v(.5em)
-  #text(size: 10pt)[Contributors: \@epsilonhalbe, \@jewelpit, \@sbatial, \@lukasjuhrich, \@ThePuzzlemaker]
+  #text(size: 10pt)[Contributors: \@epsilonhalbe, \@jewelpit, \@sbatial, \@lukasjuhrich, \@ThePuzzlemaker, \@hurzl]
   #v(4em)
 ]
 
@@ -64,7 +64,7 @@ breaking changes #index[Breaking Changes] in its next iteration.
 The package is also available via Typst's build-in Package Manager:
 
 ```typ
-    #import "@preview/in-dexter:0.6.0": *
+    #import "@preview/in-dexter:0.6.1": *
 ```
 
 Note, that the version number of the typst package has to be adapted to get the wanted
@@ -127,13 +127,11 @@ Entries can be nested. The `index` function takes multiple arguments - one for e
 nesting level.
 
 ```typ
-    #index("Sample", "medical", "blood")
     #index("Sample", "medical", "tissue")
     #index("Sample", "musical", "piano")
     #index("Sample")
 ```
 
-#index("Sample", "medical", "blood")
 #index("Sample", "medical", "tissue")
 #index("Sample", "musical", "piano")
 #index("Sample")
@@ -186,6 +184,7 @@ index page. It can contain rich content, like math expressions:
 Note that display may be ignored, if entries with the same entry key are defined
 beforehand. The first occurance of an entry defines the display of all other entries with
 that entry key.
+
 
 === Advanced entries
 
@@ -431,10 +430,9 @@ then.
 #index(fmt: strong, [Searching vs. Index])
 
 A _hand-picked_#index[Hand Picked] or _handcrafted_#index[Handcrafted] Index in times of
-search functionality#index[Search Functionality] seems a bit
-old-fashioned#index[Old-fashioned] at the first glance. But such an index allows the
-author to direct the reader, who is looking for a specific topic#index-main("Topic",
-"specific") (using index-main), to exactly the right places.
+search functionality seems a bit old-fashioned#index[Old-fashioned] at the first glance.
+But such an index allows the author to direct the reader, who is looking for a specific
+topic#index-main("Topic", "specific") (using index-main), to exactly the right places.
 
 Especially in larger documents#index[Large Documents] and books#index[Books] this becomes
 very useful, since search engines#index[Search Engines]#index3[Engines] may
@@ -508,6 +506,7 @@ all indexes together.
     use-bang-grouping: true,
     use-page-counter: true,
     sort-order: upper,
+    range-delimiter: [--]
   )
 ]
 

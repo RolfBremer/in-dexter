@@ -61,7 +61,7 @@ breaking changes #index[Breaking Changes] in its next iteration.
     #import "./in-dexter.typ": *
 ```
 
-The package is also available via Typst's build-in Package Manager:
+The package is also available via Typst's built-in Package Manager:
 
 ```typ
     #import "@preview/in-dexter:0.6.1": *
@@ -77,7 +77,7 @@ is available on GitHub.
 // This marks the start of the range for the Entry-Key "Entries"
 #index(indexType: indexTypes.Start)[Entries]
 
-// This marks the start of the range for the Entry-Key "Entriy-Marker"
+// This marks the start of the range for the Entry-Key "Entry-Marker"
 #index(indexType: indexTypes.Start)[Entry-Marker]
 
 We have marked several words to be included in an index page. The markup for the entry
@@ -182,14 +182,14 @@ index page. It can contain rich content, like math expressions:
 #indexMath(display: [$cal(T)^n$-set], "Aa-set4")
 
 Note that display may be ignored, if entries with the same entry key are defined
-beforehand. The first occurance of an entry defines the display of all other entries with
+beforehand. The first occurrence of an entry defines the display of all other entries with
 that entry key.
 
 
 === Advanced entries
 
 Simple math expressions can be used as entry key, like the following sample, where we also
-provide an initial parameter to put sort the entry unter "t" in the index:
+provide an initial parameter to put sort the entry under "t" in the index:
 
 ```typ
     #indexMath(initial: "t")[$t$-tuple]

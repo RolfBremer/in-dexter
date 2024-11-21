@@ -182,7 +182,7 @@ is quite short, and so is its index. So to fill this sample with some real text,
 let´s elaborate on some aspects of a hand picked #index[Hand Picked] index. So, "hand
 picked" means, the entries #index[Entries] in the index are carefully chosen by the
 author(s) of the document to point the reader, who is interested in a specific topic
-within the documents domain #index[Domain], to the right spot #index[Spot]. Thats, how
+within the documents domain #index[Domain], to the right spot #index[Spot]. That's, how
 it should be; and it is quite different to what is done in this sample text, where the
 objective #index-main[Objective] was to put many different index markers
 #index[Markers] into a small text, because a sample should be as brief as possible,

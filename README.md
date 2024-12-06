@@ -21,6 +21,7 @@ and fine-tuning.
     * [Brief Sample Document](#brief-sample-document)
     * [Full Sample Document](#full-sample-document)
 * [Changelog](#changelog)
+  * [v0.7.0](#v070)
   * [v0.6.1](#v061)
   * [v0.6.0](#v060)
   * [v0.5.3](#v053)
@@ -53,7 +54,7 @@ Add the following code to the head of the document file(s)
 that want to use the index:
 
 ```typ
-  #import "@preview/in-dexter:0.6.1": *
+  #import "@preview/in-dexter:0.7.0": *
 ```
 
 Alternatively it can be loaded from the file, if you have it copied into your project.
@@ -145,7 +146,7 @@ This is a very brief sample to demonstrate how in-dexter can be used. The next c
 contains a more fleshed out sample.
 
 ```typ
-#import "@preview/in-dexter:0.6.1": *
+#import "@preview/in-dexter:0.7.0": *
 
 
 = My Sample Document with `in-dexter`
@@ -165,7 +166,7 @@ This section contains the generated Index.
 ### Full Sample Document
 
 ```typ
-#import "@preview/in-dexter:0.6.1": *
+#import "@preview/in-dexter:0.7.0": *
 
 #let index-main(..args) = index(fmt: strong, ..args)
 
@@ -231,6 +232,11 @@ A more complex sample PDF is available there as well.
 </span>
 
 ## Changelog
+
+### v0.7.0
+
+* Breaking: Change enum dict "indexTypes" to "indextype" to comply with the typst naming conventions.
+* Breaking: Change parameter "indexType" to "index-type" to comply with the typst naming conventions.
 
 ### v0.6.1
 

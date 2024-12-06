@@ -24,7 +24,7 @@
   #linebreak() #v(1em)
   #text(size: 16pt)[An index package for Typst]
   #linebreak() #v(.5em)
-  #text(size: 12pt)[Version 0.6.1 (9.10.2024)]
+  #text(size: 12pt)[Version 0.7.0 (6.12.2024)]
   #linebreak() #v(.5em)
   #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
   #linebreak() #v(.5em)
@@ -64,7 +64,7 @@ breaking changes #index[Breaking Changes] in its next iteration.
 The package is also available via Typst's built-in Package Manager:
 
 ```typ
-    #import "@preview/in-dexter:0.6.1": *
+    #import "@preview/in-dexter:0.7.0": *
 ```
 
 Note, that the version number of the typst package has to be adapted to get the wanted
@@ -75,10 +75,10 @@ is available on GitHub.
 == Marking of Entries
 
 // This marks the start of the range for the Entry-Key "Entries"
-#index(indexType: indexTypes.Start)[Entries]
+#index(index-type: indextype.Start)[Entries]
 
 // This marks the start of the range for the Entry-Key "Entry-Marker"
-#index(indexType: indexTypes.Start)[Entry-Marker]
+#index(index-type: indextype.Start)[Entry-Marker]
 
 We have marked several words to be included in an index page. The markup for the entry
 stays invisible#index[Invisible]. Its location in the text gets recorded, and later it is
@@ -235,7 +235,7 @@ parameter.
 // More samples and tests
 #indexMath(([d-$phi_x^2*sum(d)$], "DPX"))
 
-#index(indexType: indexTypes.End)[Entry-Marker]
+#index(index-type: indextype.End)[Entry-Marker]
 
 
 ==== Suppressing the casing for formulas
@@ -366,17 +366,17 @@ Note that "f." and "ff." are the default symbols for `scp` and `mcp`.
 To mark a Range of pages for an index entry, one can use the following marker:
 
 ```typ
-#index(indexType: indexTypes.Start)[Entry]
+#index(index-type: indextype.Start)[Entry]
 
 // other content here
 
-#index(indexType: indexTypes.End)[Entry]
+#index(index-type: indextype.End)[Entry]
 ```
 
 Of course, you can shorten this somewhat explicit marker with your own marker, like this:
 
-#let index-start = index.with(indexType: indexTypes.Start)
-#let index-end = index.with(indexType: indexTypes.End)
+#let index-start = index.with(index-type: indextype.Start)
+#let index-end = index.with(index-type: indextype.End)
 
 
 Behavior:
@@ -475,7 +475,7 @@ or
 )
 
 // This marks the end of the range for the Entry-Key "Entries"
-#index(indexType: indexTypes.End)[Entries]
+#index(index-type: indextype.End)[Entries]
 
 
 = Index pages

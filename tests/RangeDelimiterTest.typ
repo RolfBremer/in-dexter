@@ -4,10 +4,10 @@
 _A Test with alternate range-delimiter._
 
 
-#index(indexType: indexTypes.Start)[Entry1]
+#index(index-type: indextype.Start)[Entry1]
 #pagebreak()
 #pagebreak()
-#index(indexType: indexTypes.End)[Entry1]
+#index(index-type: indextype.End)[Entry1]
 
 #pagebreak()
 

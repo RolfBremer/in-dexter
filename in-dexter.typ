@@ -2,7 +2,7 @@
 // Use of this code is governed by the License in the LICENSE.txt file.
 // For a 'how to use this package', see the accompanying .md, .pdf + .typ documents.
 
-#let indexTypes = (
+#let indextype = (
   Start: "Start",
   End: "End",
   Cardinal: "Cardinal",
@@ -10,7 +10,7 @@
 
 // Adds a new entry to the index
 // @param fmt: function: content -> content
-// @param indexType: indexTypes.Cardinal, indexTypes.Start, indexTypes.End.
+// @param index-type: indextype.Cardinal, indextype.Start, indextype.End.
 // @param initial: "letter" to sort entries under - otherwise first letter of entry is used,
 //    useful for indexing umlauts or accented letters with their unaccented versions or
 //    symbols under a common "Symbols" headline
@@ -22,7 +22,7 @@
 // entry is the key for the entry. The others are used for grouping.
 #let index(
   fmt: it => it,
-  indexType: indexTypes.Cardinal,
+  index-type: indextype.Cardinal,
   initial: none,
   index: "Default",
   display: auto,
@@ -33,7 +33,7 @@
     let loc = here()
     [#metadata((
         fmt: fmt,
-        indexType: indexType,
+        index-type: index-type,
         initial: initial,
         index-name: index,
         location: loc.position(),
@@ -146,15 +146,15 @@
     )
     let pages = current-entry.at("pages", default: ())
     let pageRanges = pages.map(p => {
-      if p.indexType == indexTypes.Start and page-link.indexType == indexTypes.End {
-        p.indexType = "Range"
+      if p.index-type == indextype.Start and page-link.index-type == indextype.End {
+        p.index-type = "Range"
         p.rangeEnd = page-link.page
         p.page-counter-end = page-link.page-counter
       }
       return p
     })
     let searchFunc = p => {
-      p.indexType == "Range" and p.rangeEnd == page-link.page or p.indexType == indexTypes.Cardinal and p.page == page-link.page and p.fmt == page-link.fmt
+      p.index-type == "Range" and p.rangeEnd == page-link.page or p.index-type == indextype.Cardinal and p.page == page-link.page and p.fmt == page-link.fmt
     }
     let foundRange = pageRanges.find(searchFunc)
     if foundRange == none {
@@ -174,7 +174,7 @@
   for indexed in query(<jkrb_index>) {
     let (
       fmt,
-      indexType,
+      index-type,
       initial,
       index-name,
       location,
@@ -253,7 +253,7 @@
             page: location.page,
             rangeEnd: location.page,
             fmt: fmt,
-            indexType: indexType,
+            index-type: index-type,
             page-counter: page-counter,
             page-counter-end: page-counter-end,
             page-numbering: page-numbering,
@@ -275,7 +275,7 @@
   range-delimiter,
   spc,
   mpc,
-  (page, rangeEnd, indexType, fmt, page-counter, page-counter-end, page-numbering),
+  (page, rangeEnd, index-type, fmt, page-counter, page-counter-end, page-numbering),
 ) = {
   if page-numbering == none {
     page-numbering = "1"
@@ -290,7 +290,7 @@
   } else {
     str(rangeEnd)
   }
-  let t = if indexType == "Range" {
+  let t = if index-type == "Range" {
     if rangeEnd - page == 1 {
       if spc != none {
         resPage + spc
@@ -302,7 +302,7 @@
     } else {
       resPage + range-delimiter + resEndPage
     }
-  } else if indexType == indexTypes.Start {
+  } else if index-type == indextype.Start {
     resPage + mpc
   } else {
     resPage

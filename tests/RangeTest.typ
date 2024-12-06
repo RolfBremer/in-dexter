@@ -11,8 +11,8 @@ _This is a test document for in-dexters range#index[Range] references.
 It is used to demonstrate and test in-dexters range references._
 
 // Define shortcuts for start and end
-#let index-start = index.with(indexType: indexTypes.Start)
-#let index-end = index.with(indexType: indexTypes.End)
+#let index-start = index.with(index-type: indextype.Start)
+#let index-end = index.with(index-type: indextype.End)
 
 
 = This is a StartEntry for the "Sample"-Entry Sample

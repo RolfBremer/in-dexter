@@ -349,14 +349,18 @@
   let pages = entry.at("pages", default: ())
   let display = entry.at("display", default: idx)
   let render-function = render-link.with(use-page-counter, range-delimiter, spc, mpc)
-  let rendered-pages = [
-    #let p = pages.map(render-function)
-    #box(width: lvl * 1em)#apply-entry-casing(
+let rendered-pages = {
+    let p = pages.map(render-function)
+    box(width: lvl * 1em)
+    apply-entry-casing(
       display,
       entry-casing,
       entry.at("apply-casing", default: auto),
-    )#box(width: 1fr)#p.join(", ") \
-  ]
+    )
+    box(width: 1fr)
+    p.join(", ")
+    parbreak()
+  }
   let sub-entries = entry.at("nested", default: (:))
   let rendered-entries = if sub-entries.keys().len() > 0 [
     #for key in sub-entries.keys().sorted(key: sort-order) [
@@ -384,6 +388,7 @@
 //        If set to none, a numeric range is used instead, like "42-43".
 // @param mpc (default: "ff.") Symbol(s) to mark a Multi-Page-Continuation.
 // @param indexes (default: auto) optional name(s) of the index(es) to use. Auto uses all indexes.
+// @param surround (default: body) a function to surround the index body with additional content/settings.
 #let make-index(
   title: none,
   outlined: false,
@@ -395,34 +400,39 @@
   mpc: "ff.",
   range-delimiter: [--],
   indexes: auto,
+  surround: (body) => {
+      set par(first-line-indent: 0pt, spacing: 0.65em, hanging-indent: 1em)
+      body
+  },
 ) = (
   context {
+    surround({
+      let (register, initials) = references(indexes, use-bang-grouping, sort-order)
 
-    let (register, initials) = references(indexes, use-bang-grouping, sort-order)
-
-    if title != none {
-      heading(
-        outlined: outlined,
-        numbering: none,
-        title,
-      )
-    }
-
-    let lastPage = counter(page).get().last()
-    let effective-mpc = if mpc == none {
-      range-delimiter + str(lastPage)
-    } else {
-      mpc
-    }
-
-    for initial in initials.keys().sorted() {
-      let letter = initials.at(initial)
-      heading(level: 2, numbering: none, outlined: false, letter)
-      let entry = register.at(letter)
-      // sort entries
-      for idx in entry.keys().sorted(key: sort-order) {
-        render-entry(idx, entry.at(idx), 0, use-page-counter, sort-order, entry-casing, range-delimiter, spc, effective-mpc)
+      if title != none {
+        heading(
+          outlined: outlined,
+          numbering: none,
+          title,
+        )
       }
-    }
+
+      let lastPage = counter(page).get().last()
+      let effective-mpc = if mpc == none {
+        range-delimiter + str(lastPage)
+      } else {
+        mpc
+      }
+
+      for initial in initials.keys().sorted() {
+        let letter = initials.at(initial)
+        heading(level: 2, numbering: none, outlined: false, letter)
+        let entry = register.at(letter)
+        // sort entries
+        for idx in entry.keys().sorted(key: sort-order) {
+          render-entry(idx, entry.at(idx), 0, use-page-counter, sort-order, entry-casing, range-delimiter, spc, effective-mpc)
+        }
+      }
+    })
   }
 )

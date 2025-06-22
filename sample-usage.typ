@@ -1,6 +1,8 @@
 #import "./in-dexter.typ": *
 
 // This typst file demonstrates the usage of the in-dexter package.
+
+// Setup the document
 #set text(lang: "en", font: "Arial", size: 10pt)
 #set heading(numbering: "1.1")
 
@@ -10,6 +12,14 @@
       counter(page).display("1")
     }],
 )
+
+#show heading: it => {
+  let level = it.level
+  let above = if level <= 3 { 2em } else if level <= 5 { 1.8em } else { 1.4em }
+  set block(above: above)
+  set text(blue)
+  it
+}
 
 // Defining handy names for separate indexes to use with in-dexter in
 // this document. this is easier as having to type the index parameter
@@ -28,13 +38,13 @@
   #linebreak() #v(.5em)
   #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
   #linebreak() #v(.5em)
-  #text(size: 10pt)[Contributors: \@epsilonhalbe, \@jewelpit, \@sbatial, \@lukasjuhrich, \@ThePuzzlemaker, \@hurzl]
+  #text(size: 10pt)[Contributors: \@epsilonhalbe, \@jewelpit, \@sbatial, \@lukasjuhrich, \@ThePuzzlemaker, \@hurzl, fungai2000]
   #v(4em)
 ]
 
 
 // Table of Content
-#outline(indent: true, title: [Content])
+#outline(indent: auto, title: [Content])
 
 
 = Sample Document to Demonstrate the in-dexter package
@@ -321,6 +331,46 @@ Here we define another semantical index marker, which adds an "ff." to the page 
 #let index-ff = index.with(fmt: it => [#it _ff._])
 
 
+==== Wrapping long entries
+
+Sometimes, an index entry is too long to fit on a single line. In such cases, the
+`in-dexter` package will not apply the `hanging-indent` and `first-line-indent` parameters
+to the entry, so that the first line is indented, and the following lines are hanging
+indented. Instead, the entry will be displayed as a single line, which may lead to entries
+that are not properly aligned in the index page.
+
+This is an example of the hanging-indent#index("Hanging indent", "a longer line that will
+wrap around to a new line")  problem in the index:
+
+```typ
+    #index("Hanging indent", "a longer line that will wrap around to a new line")
+```
+
+To solve this, the `make-index()` function has a parameter `surround`, which can be used
+to wrap the entries in a `par` environment. This will apply the `first-line-indent` and
+`hanging-indent` as well as the `spacing` parameters to the index page, so that long entries
+will be wrapped correctly. The following sample uses a `par` with `first-line-indent: 0pt`
+and `hanging-indent: 1em` to achieve this:
+
+```typ
+#make-index(
+  use-bang-grouping: true,
+  use-page-counter: true,
+  sort-order: upper,
+  surround: (body) => {
+      set par(first-line-indent: 0pt, spacing: 0.65em, hanging-indent: 1em)
+      body
+  },
+)
+```
+
+Note: The shown `surround` function is the default for the `make-index()` function. It can
+be customized to use different parameters for the `par` environment, or to use a different
+environment altogether.
+
+The parameter `body` in the `surround` function is the content of the resulting index.
+
+
 ==== Referencing Ranges and Continuations
 
 Up to this point, we used Cardinal Markers#index[Cardinal Markers] to mark the index
@@ -500,13 +550,12 @@ all indexes together.
 // A sample with a raw display text
 #index(display: `Aberration`, "Aberration")
 
-
 #columns(3)[
   #make-index(
     use-bang-grouping: true,
     use-page-counter: true,
     sort-order: upper,
-    range-delimiter: [--]
+    range-delimiter: [--],
   )
 ]
 

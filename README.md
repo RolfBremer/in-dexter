@@ -21,6 +21,7 @@ and fine-tuning.
     * [Brief Sample Document](#brief-sample-document)
     * [Full Sample Document](#full-sample-document)
 * [Changelog](#changelog)
+  * [v0.7.1](#v071)
   * [v0.7.0](#v070)
   * [v0.6.1](#v061)
   * [v0.6.0](#v060)
@@ -232,6 +233,12 @@ A more complex sample PDF is available there as well.
 </span>
 
 ## Changelog
+
+### v0.7.1
+
+* Add support for further formatting of the resulting index to address, for example, the indentation
+  of long entries. See `surround` parameter of `make-index`. The default for surround uses a par environment to beautify wrapped entries (`set par(first-line-indent: 0pt, spacing: 0.65em, hanging-indent: 1em)`).
+* Bump minimum required Typst version to 12.0.
 
 ### v0.7.0
 

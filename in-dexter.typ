@@ -404,6 +404,7 @@ let rendered-pages = {
       set par(first-line-indent: 0pt, spacing: 0.65em, hanging-indent: 1em)
       body
   },
+  section_title_style: k => heading(level: 2, numbering: none, outlined: false, k)
 ) = (
   context {
     surround({
@@ -426,7 +427,7 @@ let rendered-pages = {
 
       for initial in initials.keys().sorted() {
         let letter = initials.at(initial)
-        heading(level: 2, numbering: none, outlined: false, letter)
+        section_title_style(letter)
         let entry = register.at(letter)
         // sort entries
         for idx in entry.keys().sorted(key: sort-order) {

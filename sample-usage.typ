@@ -632,3 +632,79 @@ Here we explicitly select only the Math index.
     use-bang-grouping: true,
   )
 ]
+
+#pagebreak()
+
+== Customize letter section
+
+You can customize the look of the letter section/heading using a function:
+
+```typst
+#let my_section_title_style(letter) = {
+  set align(center + horizon)
+  set text(weight: "bold")
+  block(width: 100%, height: 1.5em, fill: blue.transparentize(50%), radius: 5pt)[
+    #letter
+  ]
+}
+
+#columns(3)[
+  #make-index(
+    section_title_style: my_section_title_style
+  )
+]
+```
+
+Here's the result:
+
+#let my_section_title_style(letter) = {
+  set align(center + horizon)
+  set text(weight: "bold")
+  block(width: 100%, height: 1.5em, fill: blue.transparentize(50%), radius: 5pt, breakable: false)[
+    #letter
+  ]
+}
+
+#columns(3)[
+  #make-index(
+    section_title_style: my_section_title_style
+  )
+]
+
+The default function is a level 2 heading:
+
+```typst
+#heading(level: 2, numbering: none, outlined: false, letter)
+```
+
+So you could also customize it by wrapping `make-index()` and redefining level 2 heading:
+
+```typst
+#let custom_index = {
+  show heading.where(level: 2): it => {
+    set text(fill: red)
+    block(it.body)
+  }
+  columns(3)[
+    #make-index(
+    )
+  ]
+}
+
+#custom_index
+```
+
+Here's the result:
+
+#let custom_index = {
+  show heading.where(level: 2): it => {
+    set text(fill: red)
+    block(it.body)
+  }
+  columns(3)[
+    #make-index(
+    )
+  ]
+}
+
+#custom_index

@@ -34,11 +34,11 @@
   #linebreak() #v(1em)
   #text(size: 16pt)[An index package for Typst]
   #linebreak() #v(.5em)
-  #text(size: 12pt)[Version 0.7.0 (6.12.2024)]
+  #text(size: 12pt)[Version 0.7.2 (26.6.2025)]
   #linebreak() #v(.5em)
   #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
   #linebreak() #v(.5em)
-  #text(size: 10pt)[Contributors: \@epsilonhalbe, \@jewelpit, \@sbatial, \@lukasjuhrich, \@ThePuzzlemaker, \@hurzl, fungai2000]
+  #text(size: 10pt)[Contributors: \@epsilonhalbe, \@jewelpit, \@sbatial, \@lukasjuhrich, \@ThePuzzlemaker, \@hurzl, \@fungai2000, \@Iriamu19 ]
   #v(4em)
 ]
 
@@ -74,7 +74,7 @@ breaking changes #index[Breaking Changes] in its next iteration.
 The package is also available via Typst's built-in Package Manager:
 
 ```typ
-    #import "@preview/in-dexter:0.7.0": *
+    #import "@preview/in-dexter:0.7.2": *
 ```
 
 Note, that the version number of the typst package has to be adapted to get the wanted
@@ -476,6 +476,69 @@ Default is `false`. In-dexter uses the page counter instead of the physical page
 then.
 
 
+=== Customize Letter Section Headings<sec:customize-letter-section>
+
+It is possible to customize the letter section#index[Letter Section] headings of the index
+page. The `make-index()` function has a parameter `section-title`, which can be set
+to a function that takes the letter and the counter of the section as parameters. The
+function should return a `content` that is used as the section heading. See some samples
+in @sec:customize-letter-section-sample below.
+
+The default function for `section-title` is a level 2 heading:
+
+```typst
+#heading(level: 2, numbering: none, outlined: false, letter)
+```
+
+but it can be easily customized to use a different style, like a block with a background
+color, a line, or even no heading at all. The following sample uses a block with
+a background color and a radius to create a rounded rectangle as section heading:
+
+```typ
+#let my-section-title(letter, counter) = {
+  set align(center + horizon)
+  set text(weight: "bold")
+  block(width: 100%, height: 1.5em, fill: blue.transparentize(50%), radius: 5pt)[
+    #letter
+  ]
+}
+#columns(3)[
+  #make-index(
+    use-bang-grouping: true,
+    section-title: my-section-title
+  )
+]
+```
+
+The `counter` parameter is the number of the section, starting with 0 for the first
+section. The `letter` parameter is the letter of the section, which is used
+to group the entries in the index page.
+
+
+=== Customize Section Body
+
+The `make-index()` function also has a parameter `section-body`, which can be set to a
+function that takes the letter, the counter of the section, and the body of the section as
+parameters. The function should return a `content` that is used as the body of the section.
+This allows to customize the look of the section body, like adding an inset or a background
+color. The following sample uses an inset to add some space around the body of the section:
+
+```typ
+#make-index(
+  use-bang-grouping: true,
+  section-title: my-section-title,
+  section-body: (letter, counter, body) => {
+    block(inset: (left:.5em, right: .5em), body)
+  }
+)
+```
+
+The `counter` parameter is the number of the section, starting with 0 for the first
+section. The `body` parameter is the content of the section, which is the list of entries
+for the section. The `letter` parameter is the letter of the section, which is used
+to group the entries in the index page.
+
+
 = Why Having an Index in Times of Search Functionality?
 #index(fmt: strong, [Searching vs. Index])
 
@@ -635,12 +698,13 @@ Here we explicitly select only the Math index.
 
 #pagebreak()
 
-== Customize letter section
 
-You can customize the look of the letter section/heading using a function:
+== Customize letter section<sec:customize-letter-section-sample>
+
+You can customize the look of the letter section#index[Letter Section]/heading using a function:
 
 ```typst
-#let my_section_title_style(letter) = {
+#let my-section-title(letter, counter) = {
   set align(center + horizon)
   set text(weight: "bold")
   block(width: 100%, height: 1.5em, fill: blue.transparentize(50%), radius: 5pt)[
@@ -650,14 +714,13 @@ You can customize the look of the letter section/heading using a function:
 
 #columns(3)[
   #make-index(
-    section_title_style: my_section_title_style
+    use-bang-grouping: true,
+    section-title: my-section-title
   )
 ]
 ```
 
-Here's the result:
-
-#let my_section_title_style(letter) = {
+#let my-section-title(letter, counter) = {
   set align(center + horizon)
   set text(weight: "bold")
   block(width: 100%, height: 1.5em, fill: blue.transparentize(50%), radius: 5pt, breakable: false)[
@@ -667,44 +730,65 @@ Here's the result:
 
 #columns(3)[
   #make-index(
-    section_title_style: my_section_title_style
+    use-bang-grouping: true,
+    section-title: my-section-title,
+    section-body: (letter, counter, body) => {
+      block(inset: (left:.5em, right: .5em), body)
+    }
   )
 ]
 
-The default function is a level 2 heading:
 
-```typst
-#heading(level: 2, numbering: none, outlined: false, letter)
+=== Sample with a small gap as section divider:
+
+Here we have an index page without letter section headings, but with a small gap as
+section divider. Note that we skip the first section heading, if the counter is 0, so that
+the first section does not have a line above it:
+
+#columns(3)[
+  #make-index(
+    use-bang-grouping: true,
+    section-title: (letter, counter) => {
+       if counter > 0 { v(1em) }
+      }
+  )
+]
+
+
+=== Sample with a line as section divider:
+
+Here we have an index page without letter section headings, but with a line as section
+divider. Note that we skip the first section heading, if the counter is 0, so that
+the first section does not have a line above it:
+
+```typ
+#columns(2)[
+  #make-index(
+    use-bang-grouping: true,
+    section-title: (letter, counter) => {
+       if counter > 0 { line(length: 100%, stroke: .3pt + blue) }
+      }
+  )
+]
 ```
 
-So you could also customize it by wrapping `make-index()` and redefining level 2 heading:
+#columns(2)[
+  #make-index(
+    use-bang-grouping: true,
+    section-title: (letter, counter) => {
+       if counter > 0 { line(length: 100%, stroke: .3pt + blue) }
+      }
+  )
+]
 
-```typst
-#let custom_index = {
-  show heading.where(level: 2): it => {
-    set text(fill: red)
-    block(it.body)
-  }
-  columns(3)[
-    #make-index(
-    )
-  ]
-}
 
-#custom_index
-```
+=== Sample without letter section headings:
 
-Here's the result:
+This is suitable for very small index pages.
 
-#let custom_index = {
-  show heading.where(level: 2): it => {
-    set text(fill: red)
-    block(it.body)
-  }
-  columns(3)[
-    #make-index(
-    )
-  ]
-}
-
-#custom_index
+#columns(2)[
+  #make-index(
+    use-bang-grouping: true,
+    section-title: (letter, counter) => {}
+  )
+]

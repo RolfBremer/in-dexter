@@ -21,6 +21,7 @@ and fine-tuning.
     * [Brief Sample Document](#brief-sample-document)
     * [Full Sample Document](#full-sample-document)
 * [Changelog](#changelog)
+  * [v0.7.2](#v072)
   * [v0.7.1](#v071)
   * [v0.7.0](#v070)
   * [v0.6.1](#v061)
@@ -55,7 +56,7 @@ Add the following code to the head of the document file(s)
 that want to use the index:
 
 ```typ
-  #import "@preview/in-dexter:0.7.0": *
+  #import "@preview/in-dexter:0.7.2": *
 ```
 
 Alternatively it can be loaded from the file, if you have it copied into your project.
@@ -147,7 +148,7 @@ This is a very brief sample to demonstrate how in-dexter can be used. The next c
 contains a more fleshed out sample.
 
 ```typ
-#import "@preview/in-dexter:0.7.0": *
+#import "@preview/in-dexter:0.7.2": *
 
 
 = My Sample Document with `in-dexter`
@@ -167,7 +168,7 @@ This section contains the generated Index.
 ### Full Sample Document
 
 ```typ
-#import "@preview/in-dexter:0.7.0": *
+#import "@preview/in-dexter:0.7.2": *
 
 #let index-main(..args) = index(fmt: strong, ..args)
 
@@ -234,10 +235,16 @@ A more complex sample PDF is available there as well.
 
 ## Changelog
 
+### v0.7.2
+
+* Add support for customization of the letter section title, the letter section body and their container.
+  (see `make-index`, parameters `section-title`, `section-body`, `section-container` ).
+
 ### v0.7.1
 
 * Add support for further formatting of the resulting index to address, for example, the indentation
-  of long entries. See `surround` parameter of `make-index`. The default for surround uses a par environment to beautify wrapped entries (`set par(first-line-indent: 0pt, spacing: 0.65em, hanging-indent: 1em)`).
+  of long entries. See `surround` parameter of `make-index`. The default for surround uses a par environment
+  to beautify wrapped entries (`set par(first-line-indent: 0pt, spacing: 0.65em, hanging-indent: 1em)`).
 * Bump minimum required Typst version to 12.0.
 
 ### v0.7.0

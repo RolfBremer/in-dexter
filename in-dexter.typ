@@ -349,6 +349,7 @@
   let pages = entry.at("pages", default: ())
   let display = entry.at("display", default: idx)
   let render-function = render-link.with(use-page-counter, range-delimiter, spc, mpc)
+
 let rendered-pages = {
     let p = pages.map(render-function)
     box(width: lvl * 1em)
@@ -361,7 +362,9 @@ let rendered-pages = {
     p.join(", ")
     parbreak()
   }
+
   let sub-entries = entry.at("nested", default: (:))
+
   let rendered-entries = if sub-entries.keys().len() > 0 [
     #for key in sub-entries.keys().sorted(key: sort-order) [
       #render-entry(key, sub-entries.at(key), lvl + 1, use-page-counter, sort-order, entry-casing, range-delimiter, spc, mpc)
@@ -389,6 +392,9 @@ let rendered-pages = {
 // @param mpc (default: "ff.") Symbol(s) to mark a Multi-Page-Continuation.
 // @param indexes (default: auto) optional name(s) of the index(es) to use. Auto uses all indexes.
 // @param surround (default: body) a function to surround the index body with additional content/settings.
+// @param section-container (default: section) a function to wrap the whole section in a container.
+// @param section-title (default: heading(level: 2, numbering: none, outlined: false, letter))
+// @param section-body (default: body) a function to render the body of the section.
 #let make-index(
   title: none,
   outlined: false,
@@ -404,7 +410,9 @@ let rendered-pages = {
       set par(first-line-indent: 0pt, spacing: 0.65em, hanging-indent: 1em)
       body
   },
-  section_title_style: k => heading(level: 2, numbering: none, outlined: false, k)
+  section-container: (section) => {section},
+  section-title: (letter, counter) => heading(level: 2, numbering: none, outlined: false, letter),
+  section-body: (letter, counter, body) => {body}
 ) = (
   context {
     surround({
@@ -425,14 +433,20 @@ let rendered-pages = {
         mpc
       }
 
+      let counter = 0
       for initial in initials.keys().sorted() {
         let letter = initials.at(initial)
-        section_title_style(letter)
-        let entry = register.at(letter)
-        // sort entries
-        for idx in entry.keys().sorted(key: sort-order) {
-          render-entry(idx, entry.at(idx), 0, use-page-counter, sort-order, entry-casing, range-delimiter, spc, effective-mpc)
-        }
+        section-container({
+          section-title(letter, counter)
+          section-body(letter, counter, {
+            counter += 1
+            let entry = register.at(letter)
+            // sort and render entries
+            for idx in entry.keys().sorted(key: sort-order) {
+              render-entry(idx, entry.at(idx), 0, use-page-counter, sort-order, entry-casing, range-delimiter, spc, effective-mpc)
+            }
+          })
+        })
       }
     })
   }

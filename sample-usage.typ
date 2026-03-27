@@ -498,7 +498,7 @@ a background color and a radius to create a rounded rectangle as section heading
 #let my-section-title(letter, counter) = {
   set align(center + horizon)
   set text(weight: "bold")
-  block(width: 100%, height: 1.5em, fill: blue.transparentize(50%), radius: 5pt)[
+  block(width: 100%, height: 1.5em, fill: blue.transparentize(50%), radius: 5pt, sticky: true)[
     #letter
   ]
 }
@@ -707,7 +707,7 @@ You can customize the look of the letter section#index[Letter Section]/heading u
 #let my-section-title(letter, counter) = {
   set align(center + horizon)
   set text(weight: "bold")
-  block(width: 100%, height: 1.5em, fill: blue.transparentize(50%), radius: 5pt)[
+  block(width: 100%, height: 1.5em, fill: blue.transparentize(50%), radius: 5pt, sticky: true)[
     #letter
   ]
 }
@@ -723,7 +723,7 @@ You can customize the look of the letter section#index[Letter Section]/heading u
 #let my-section-title(letter, counter) = {
   set align(center + horizon)
   set text(weight: "bold")
-  block(width: 100%, height: 1.5em, fill: blue.transparentize(50%), radius: 5pt, breakable: false)[
+  block(width: 100%, height: 1.5em, fill: blue.transparentize(50%), radius: 5pt, breakable: false, sticky: true)[
     #letter
   ]
 }

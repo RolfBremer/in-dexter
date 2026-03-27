@@ -38,7 +38,7 @@
   #linebreak() #v(.5em)
   #text(size: 10pt)[Rolf Bremer, Jutta Klebe]
   #linebreak() #v(.5em)
-  #text(size: 10pt)[Contributors: \@epsilonhalbe, \@jewelpit, \@sbatial, \@lukasjuhrich, \@ThePuzzlemaker, \@hurzl, \@fungai2000, \@Iriamu19 ]
+  #text(size: 10pt)[Contributors: \@epsilonhalbe, \@jewelpit, \@sbatial, \@lukasjuhrich, \@ThePuzzlemaker, \@hurzl, \@fungai2000, \@Iriamu19, \@edusantana ]
   #v(4em)
 ]
 

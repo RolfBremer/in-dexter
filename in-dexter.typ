@@ -92,12 +92,12 @@
   if use-bang-grouping and entries.len() == 1 {
     let entry = entries.at(0)
     if type(entry.key) == str and entry.key.len() > 0 {
-      let disp = entry.display
+      let display = entry.display
       entries = entry.key.split("!").map(e => {
-        let d = if type(disp) == str and disp.contains(regex("!\w+")) {
+        let d = if type(display) == str and display.contains(regex("!\w+")) {
           e
         } else {
-          disp
+          display
         }
         (display: d, key: e)
       })

@@ -359,7 +359,7 @@ let rendered-pages = {
       entry.at("apply-casing", default: auto),
     )
     if entry-page-separator != none {
-      box(width: 1fr, repeat[#entry-page-separator])
+      box(width: 1fr, entry-page-separator)
     } else {
       box(width: 1fr)
     }

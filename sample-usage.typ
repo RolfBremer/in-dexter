@@ -547,7 +547,7 @@ pass the `entry-page-separator` parameter to `make-index()`.
 ```typ
 #make-index(
   use-page-counter: true,
-  entry-page-separator: [.#h(3pt)]
+  entry-page-separator: repeat[.#h(3pt)]
 )
 ```
 

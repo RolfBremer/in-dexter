@@ -345,7 +345,7 @@
 }
 
 // Internal function to format a plain or nested entry
-#let render-entry(idx, entry, lvl, use-page-counter, sort-order, entry-casing, range-delimiter, spc, mpc) = {
+#let render-entry(idx, entry, lvl, use-page-counter, sort-order, entry-casing, range-delimiter, spc, mpc, entry-page-separator) = {
   let pages = entry.at("pages", default: ())
   let display = entry.at("display", default: idx)
   let render-function = render-link.with(use-page-counter, range-delimiter, spc, mpc)
@@ -358,7 +358,11 @@ let rendered-pages = {
       entry-casing,
       entry.at("apply-casing", default: auto),
     )
-    box(width: 1fr)
+    if entry-page-separator != none {
+      box(width: 1fr, entry-page-separator)
+    } else {
+      box(width: 1fr)
+    }
     p.join(", ")
     parbreak()
   }
@@ -367,7 +371,7 @@ let rendered-pages = {
 
   let rendered-entries = if sub-entries.keys().len() > 0 [
     #for key in sub-entries.keys().sorted(key: sort-order) [
-      #render-entry(key, sub-entries.at(key), lvl + 1, use-page-counter, sort-order, entry-casing, range-delimiter, spc, mpc)
+      #render-entry(key, sub-entries.at(key), lvl + 1, use-page-counter, sort-order, entry-casing, range-delimiter, spc, mpc, entry-page-separator)
     ]
   ]
   [
@@ -395,6 +399,7 @@ let rendered-pages = {
 // @param section-container (default: section) a function to wrap the whole section in a container.
 // @param section-title (default: heading(level: 2, numbering: none, outlined: false, letter))
 // @param section-body (default: body) a function to render the body of the section.
+// @param entry-page-separator (default: none) content to place between the entry label and its page list.
 #let make-index(
   title: none,
   outlined: false,
@@ -412,7 +417,8 @@ let rendered-pages = {
   },
   section-container: (section) => {section},
   section-title: (letter, counter) => heading(level: 2, numbering: none, outlined: false, letter),
-  section-body: (letter, counter, body) => {body}
+  section-body: (letter, counter, body) => {body},
+  entry-page-separator: none,
 ) = (
   context {
     surround({
@@ -443,7 +449,7 @@ let rendered-pages = {
             let entry = register.at(letter)
             // sort and render entries
             for idx in entry.keys().sorted(key: sort-order) {
-              render-entry(idx, entry.at(idx), 0, use-page-counter, sort-order, entry-casing, range-delimiter, spc, effective-mpc)
+              render-entry(idx, entry.at(idx), 0, use-page-counter, sort-order, entry-casing, range-delimiter, spc, effective-mpc, entry-page-separator)
             }
           })
         })

@@ -539,6 +539,23 @@ for the section. The `letter` parameter is the letter of the section, which is u
 to group the entries in the index page.
 
 
+=== Customizing the separator between entry and pages
+
+To add a dotted leader for example between an entry and the page numbers in the generated index,
+pass the `entry-page-separator` parameter to `make-index()`.
+
+```typ
+#make-index(
+  use-page-counter: true,
+  entry-page-separator: repeat[.#h(3pt)]
+)
+```
+
+This renders entries like `Entry .... 3, 7` and is useful when you want a more
+traditional index style with a visible separator between the term and its references.
+
+
+
 = Why Having an Index in Times of Search Functionality?
 #index(fmt: strong, [Searching vs. Index])
 

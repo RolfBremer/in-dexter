@@ -235,6 +235,11 @@ A more complex sample PDF is available there as well.
 
 ## Changelog
 
+### Unreleased
+
+* Fix: page references are listed in page order, also when marks in floating figures or tables
+  land on a later page than the marks that follow them in the source.
+
 ### v0.7.2
 
 * Add support for customization of the letter section title, the letter section body and their container.

@@ -468,6 +468,11 @@ only uses the entries of the secondary and tertiary index. See sample output in
 ```
 
 
+The page references of an entry are listed in ascending page order, even when a mark in a
+floating figure#index[Floating Figures] or table lands on a later page than the marks that
+follow it in the source.
+
+
 === Skipping physical pages
 
 If page number 1 is not the first physical page#index-main[physical page] of the document,

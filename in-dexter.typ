@@ -346,7 +346,10 @@
 
 // Internal function to format a plain or nested entry
 #let render-entry(idx, entry, lvl, use-page-counter, sort-order, entry-casing, range-delimiter, spc, mpc) = {
-  let pages = entry.at("pages", default: ())
+  // Pages are collected in source order, which is not always page order:
+  // a mark in a floating figure can land on a later page than the marks
+  // after it.
+  let pages = entry.at("pages", default: ()).sorted(key: p => p.page)
   let display = entry.at("display", default: idx)
   let render-function = render-link.with(use-page-counter, range-delimiter, spc, mpc)
 
